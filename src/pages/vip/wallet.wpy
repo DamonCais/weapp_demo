@@ -1,0 +1,86 @@
+<template>
+  <view class="p-20 border-box wallet">
+    <card class="mb-20" title="账户余额">
+      <view @tap="tapExtra" slot="extra">余额说明</view>
+      <view slot="body" class="wux-assertive">￥
+        <text class="fs-48">0</text>
+      </view>
+    </card>
+    <view class="mb-200">
+    <i-panel  title="充值有礼">
+      <image
+        class="wallet-img"
+        src="http://mp.jycais.cn/uploadDir/upload_0cfd66bc1e81a808e4d1b14231936da7.jpg"
+        mode="scaleToFill"
+      >
+    </i-panel>
+    </view>
+
+    <view class="footer pv-20 bg-white border-box">
+      <wux-button @tap="tapPaid" block type="balanced">马上充值</wux-button>
+    </view>
+    <wux-popup closable visible="{{ visible }}" title="余额说明" @close="onClose">
+      <view class="p-20" style="text-align:left;">
+        <view>1.余额不能返现</view>
+        <view>2.余额包括充值余额和退款余额</view>
+        <view>3.你的xxxxx</view>
+        <view>4.</view>
+      </view>
+    </wux-popup>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import card from '@/components/card';
+export default class wallet extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的钱包',
+    usingComponents: {
+      'wux-button': '../../wux/button/index',
+      'wux-card': '../../wux/card/index',
+      'wux-popup': '../../wux/popup/index',
+      'i-panel': '../../iview/panel/index'
+    }
+  };
+  components = {
+    card: card
+  };
+
+  data = {
+    visible: false
+  };
+
+  computed = {};
+
+  methods = {
+    tapExtra(e) {
+      this.visible = true;
+    },
+    tapPaid(e){
+      wepy.navigateTo({ url: '/pages/vip/recharge' });
+      
+    },
+    onClose() {
+      this.visible = false;
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.wallet-img {
+  width: 100%;
+  height: 800rpx;
+}
+</style>

@@ -1,0 +1,80 @@
+<template>
+  <view class="p-20">
+    <wux-popup maskClosable="{{false}}" visible="{{ true }}" title="{{title}}">
+      <image src="{{img}}" style="width:100%">
+      <view slot="footer" class="flex pv-20" style="width:100%"   >
+        <wux-button style="width:100%"  size="small" loading="{{loading}}" block type="balanced">{{loading?'轮询中...':'完成'}}</wux-button>
+      </view>
+    </wux-popup>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class base extends wepy.page {
+  config = {
+    navigationBarTitleText: '换电中',
+    usingComponents: {
+      'wux-button': '../../wux/button/index',
+      'wux-popup': '../../wux/popup/index'
+    }
+  };
+  components = {};
+
+  data = {
+    loading: true,
+    title: '',
+    img: '',
+    currentStep: 0,
+    steps: [
+      {
+        title: '开门并放入电池',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
+      },
+      {
+        title: '取出电池',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      },
+      {
+        title: '关闭电门',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {
+    this.title = this.steps[0].title;
+    this.img = this.steps[0].img;
+    this.$apply();
+    this.checkCurrentStep();
+  }
+  checkCurrentStep() {
+    let timer = setInterval(() => {
+      this.currentStep++;
+      if (this.currentStep === 1) {
+        this.title = this.steps[1].title;
+        this.img = this.steps[1].img;
+        this.$apply();
+      } else if (this.currentStep === 2) {
+        this.title = this.steps[2].title;
+        this.img = this.steps[2].img;
+        this.loading = false;
+        clearInterval(timer);
+        this.$apply();
+      }
+    }, 3000);
+  }
+}
+</script>
+
+<style>
+</style>

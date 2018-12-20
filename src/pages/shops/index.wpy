@@ -1,0 +1,163 @@
+<template>
+  <view>
+    <!-- 定位 -->
+    <!-- <view class="flex justify-space-between mb-20 bg-white p-20">
+      <view @tap="tapLocation" class="flex align-center" style="flex-grow:1;">
+        <wux-icon class="mr-20" type="ios-pin"/>
+        <text class="wux-ellipsis" style="width:300rpx">{{location.address||'第一营业点'}}</text>
+      </view>
+      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
+    </view>-->
+
+    <view class="flex align-center mb-20 bg-white pl-20">
+      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
+      <view class="pl-20" style="flex-grow:1;">
+        <wux-search-bar @tap="tapSearchBar" clear=""/>
+        <!-- <wux-button size="small" @tap="tapSearchBar" block outline type="light">
+          <wux-icon type="ios-search" size="16"/>Search
+        </wux-button>-->
+      </view>
+    </view>
+    <wux-cell title="附近营业点:{{filterText[filterType]}}" @tap="tapFilter" extra="筛选"></wux-cell>
+    <view class="bg-white pv-20">
+      <wux-media
+        @tap="tapShop"
+        data-id="{{item.id}}"
+        wx:for="{{shopList}}"
+        thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+        thumb-style="border-radius: 50%"
+      >
+        <view class="flex justify-space-between pv-20">
+          <text class="wux-ellipsis">{{item.name}}</text>
+          <text class="wux-ellipsis">{{item.distanceText}}</text>
+        </view>
+      </wux-media>
+    </view>
+    <wux-popup
+      closable
+      visible="{{ locationPop }}"
+      title="定位"
+      content="请求获取定位权限"
+      @close="onCloseLocationPop"
+    >
+      <wux-button openType="openSetting" @opensetting="onOpenSetting" block type="balanced">确认</wux-button>
+    </wux-popup>
+    <wux-actionsheet id="wux-actionsheet"/>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/tip';
+import {
+  FILTER_LIST,
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO,
+  USER_INFO
+} from '@/utils/constant';
+
+export default class shops extends wepy.page {
+  config = {
+    navigationBarTitleText: '营业网点',
+    navigationBarBackgroundColor: '#ffc900',
+    backgroundColor: '#ffc900',
+    usingComponents: {
+      'wux-accordion-group': '../../wux/accordion-group/index',
+      'wux-accordion': '../../wux/accordion/index',
+      'wux-popup': '../../wux/popup/index',
+      'wux-button': '../../wux/button/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-badge': '../../wux/badge/index',
+      'wux-card': '../../wux/card/index',
+      'wux-filterbar': '../../wux/filterbar/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-search-bar': '../../wux/search-bar/index',
+      'wux-popover': '../../wux/popover/index',
+      'wux-media': '../../wux/media/index'
+    }
+  };
+  components = {};
+
+  data = {
+    showshopList: false,
+    hasMore: true,
+    authSetting: {},
+    locationPop: false,
+    swiperList: [
+      { img: 'https://j-image.missfresh.cn/img_20181114145542681.jpg' },
+      { img: 'https://j-image.missfresh.cn/img_20181114145542681.jpg' }
+    ],
+    filterType: 4,
+    filterText: ['换电', '租车', '加盟', '全部'],
+    shopList: [],
+
+    shopList0: [
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 1,
+        distanceText: '700m'
+      },
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 2,
+        distanceText: '800m'
+      },
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 3,
+        distanceText: '1.4km'
+      }
+    ],
+    location: {},
+    items: []
+  };
+
+  computed = {};
+
+  methods = {
+    async tapFilter() {
+      try {
+        let res = await wepy.showActionSheet({
+          itemList: ['我要换电', '我要租车', '我要加盟'] //按钮的文字数组，数组长度最大为6个,
+        });
+        this.filterType = res.tapIndex;
+        this.$apply();
+      } catch (error) {}
+    },
+    tapSearchBar(e) {
+      // wepy.navigateTo({ url: '/pages/search' });
+    },
+    tapShop(e) {
+      let { id } = e.currentTarget.dataset;
+      wepy.navigateTo({ url: '/pages/shops/shop?id=' + id });
+    },
+    async tapScan(e) {
+      try {
+        let res = await wepy.scanCode({
+          onlyFromCamera: false //是否只能从相机扫码，不允许从相册选择图片,
+        });
+        console.log(res.result);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    tapLoadMore() {
+      this.shopList = [...this.shopList0, ...this.shopList1].sort(
+        (a, b) => a.distance - b.distance
+      );
+      this.hasMore = false;
+      this.$apply();
+    }
+  };
+
+  events = {};
+
+  onLoad() {
+    this.shopList = this.shopList0;
+  }
+}
+</script>
+
+<style>
+</style>

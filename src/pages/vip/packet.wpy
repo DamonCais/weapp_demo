@@ -1,0 +1,47 @@
+<template>
+  <view class="p-20">
+    <i-cell title="推荐有奖" value="10元现金奖不停" is-link>
+      <wux-icon slot="icon" size="20" class="mr-20 wux-assertive" type="ios-gift"/>
+    </i-cell>
+    <view class="mt-20">
+      <i-cell title="平台通用红包" value="马上使用" is-link>
+        <view slot="icon" class="mr-20 wux-assertive">￥
+          <text class="fs-48">10</text>
+        </view>
+        <view slot="label">
+          <view>.2018-12-20至2018-12-22</view>
+          <view>.满25元使用</view>
+          <view>.限蕉城区使用</view>
+        </view>
+      </i-cell>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class packet extends wepy.page {
+  config = {
+    navigationBarTitleText: '红包',
+    usingComponents: {
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'wux-icon': '../../wux/icon/index'
+    }
+  };
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style>
+</style>

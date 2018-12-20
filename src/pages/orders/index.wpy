@@ -1,0 +1,116 @@
+<template>
+  <view>
+    <wux-tabs wux-class="bordered" controlled current="{{ current }}" @change="onTabsChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <wux-tab key="{{ item.key }}">
+          <wux-badge count="{{item.count}}">{{item.title}}</wux-badge>
+        </wux-tab>
+      </block>
+    </wux-tabs>
+    <view class="p-20">
+      <view wx:for="{{orders}}" class="mb-20">
+        <wux-card title="{{item.title}}">
+          <view slot="body">交易编号: {{item.id}}</view>
+          <view style="width:100%;" class="flex justify-flex-end" slot="footer">
+            <wux-button wx:if="{{item.status=='paid'}}" block size="small" type="assertive">已支付</wux-button>
+            <wux-button
+              data-id="{{item.id}}"
+              @tap="tapToPaid"
+              wx:if="{{item.status=='unpaid'}}"
+              block
+              size="small"
+              type="calm"
+            >待支付</wux-button>
+          </view>
+        </wux-card>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class orders extends wepy.page {
+  config = {
+    navigationBarTitleText: '交易记录',
+    usingComponents: {
+      'wux-button': '../../wux/button/index',
+      'wux-tabs': '../../wux/tabs/index',
+      'wux-tab': '../../wux/tab/index',
+      'wux-badge': '../../wux/badge/index',
+      'wux-card': '../../wux/card/index'
+    }
+  };
+  components = {};
+
+  data = {
+    current: 'all',
+    currentIndex: 0,
+    tabs: [
+      {
+        key: 'all',
+        title: '全部'
+      },
+      {
+        key: 'paid',
+        title: '已支付'
+      },
+      {
+        key: 'unpaid',
+        title: '待支付',
+        count: 1
+      }
+    ],
+    orders: [],
+    baseOrders: [
+      {
+        title: '换电池',
+        id: 'abc123',
+        status: 'paid'
+      },
+      {
+        title: '租电动车',
+        id: 'efg458',
+        status: 'unpaid'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    tapToPaid(e) {
+      let { id } = e.currentTarget.dataset;
+      console.log(id);
+      wepy.navigateTo({ url: '/pages/orders/order?id=' + id });
+    },
+    onTabsChange(e) {
+      console.log('onTabsChange', e);
+      const { key } = e.detail;
+      const index = this.data.tabs.map(n => n.key).indexOf(key);
+      this.current = key;
+      this.currentIndex = index;
+      if (key === 'all') {
+        this.orders = [...this.baseOrders];
+      } else {
+        this.orders = this.baseOrders.filter(o => o.status === key);
+      }
+      this.$apply();
+    }
+  };
+
+  events = {};
+
+  onLoad(options) {
+    console.log(options);
+    let { tab } = options;
+    this.current = `tab${tab}`;
+    this.currentIndex = tab - 1 || 0;
+    this.orders = [...this.baseOrders];
+    this.$apply();
+  }
+}
+</script>
+
+<style>
+</style>

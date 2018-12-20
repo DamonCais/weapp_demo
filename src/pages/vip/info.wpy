@@ -1,0 +1,169 @@
+<template>
+  <view>
+    <wux-select id="wux-select1"/>
+    <view class="wux-energized--bg p-20 mb-20">
+      <wux-media thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
+        <view class="flex column justify-space-around pv-20">
+          <view class="c333">{{userInfo.nickName}}</view>
+          <view class="c999">{{baseForm.phone.value}}</view>
+        </view>
+      </wux-media>
+    </view>
+    <view style="margin-bottom:200rpx;">
+      <!-- <wux-cell-group title="基本信息"> -->
+      <i-panel title="基本信息">
+        <editList1 wx:if="{{isEdit}}" :form.sync="baseForm"/>
+        <showList1 wx:if="{{!isEdit}}" :form.sync="baseForm"/>
+      </i-panel>
+      <!-- </wux-cell-group> -->
+      <!-- <wux-cell-group title="户籍资料"> -->
+      <i-panel title="户籍资料">
+        <editList2 wx:if="{{isEdit}}" :form.sync="residenceForm"/>
+        <showList2 wx:if="{{!isEdit}}" :form.sync="residenceForm"/>
+      </i-panel>
+      <i-panel title="公司资料">
+        <editList3 wx:if="{{isEdit}}" :form.sync="companyForm"/>
+        <showList3 wx:if="{{!isEdit}}" :form.sync="companyForm"/>
+      </i-panel>
+      <i-panel title="学历">
+        <editList4 wx:if="{{isEdit}}" :form.sync="educationForm"/>
+        <showList4 wx:if="{{!isEdit}}" :form.sync="educationForm"/>
+      </i-panel>
+      <i-panel title="紧急联系人">
+        <editList5 wx:if="{{isEdit}}" :form.sync="emergencyForm"/>
+        <showList5 wx:if="{{!isEdit}}" :form.sync="emergencyForm"/>
+      </i-panel>
+    </view>
+    <!-- </wux-cell-group> -->
+    <view class="info-footer">
+      <view wx:if="{{isEdit}}" class="p-20 flex justify-space-between text-center">
+        <view class="flex-grow pv-20">
+          <button @tap="triggleIsEdit" class="radio-20 wux-assertive--bg button">取消</button>
+        </view>
+        <view class="flex-grow pv-20">
+          <button @tap="triggleIsEdit" class="radio-20 wux-positive--bg button">更新</button>
+        </view>
+      </view>
+      <view wx:if="{{!isEdit}}" class="p-20 flex justify-space-between text-center">
+        <view @tap="triggleIsEdit" class="flex-grow pv-20">
+          <button class="radio-20 wux-balanced--bg button">编辑</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import {
+  baseForm,
+  residenceForm,
+  companyForm,
+  educationForm,
+  emergencyForm,
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO,
+  USER_INFO
+} from '@/utils/constant';
+import { $wuxSelect } from '@/wux/index';
+import editList from '@/components/editList';
+import showList from '@/components/showList';
+export default class vip extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人资料',
+    navigationBarBackgroundColor: '#ffc900',
+    backgroundColor: '#ffc900',
+    usingComponents: {
+      'wux-accordion-group': '../../wux/accordion-group/index',
+      'wux-accordion': '../../wux/accordion/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-grids': '../../wux/grids/index',
+      'wux-grid': '../../wux/grid/index',
+      'wux-button': '../../wux/button/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-input': '../../wux/input/index',
+      'wux-media': '../../wux/media/index',
+      'wux-tag': '../../wux/tag/index',
+      'wux-select': '../../wux/select/index',
+      'i-input': '../../iview/input/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index',
+      'i-load-more': '../../iview/load-more/index'
+    }
+  };
+  components = {
+    editList1: editList,
+    showList1: showList,
+    editList2: editList,
+    showList2: showList,
+    editList3: editList,
+    showList3: showList,
+    editList4: editList,
+    showList4: showList,
+    editList5: editList,
+    showList5: showList
+  };
+
+  data = {
+    userInfo: {},
+
+    name: 'abc',
+
+    baseForm: baseForm,
+    residenceForm: residenceForm,
+    companyForm: companyForm,
+    educationForm: educationForm,
+    emergencyForm: emergencyForm,
+    isEdit: false
+  };
+
+  computed = {};
+
+  methods = {
+    bindDateChange(e) {
+      console.log(e);
+    },
+    onConfirm(e) {
+      console.log(e);
+      let { key } = e.target.dataset;
+      let { value } = e.detail;
+      this.baseForm[key] = value;
+      // this.$apply();
+    },
+    triggleIsEdit() {
+      this.isEdit = !this.isEdit;
+      this.$apply();
+    },
+    tapSexSelect(e) {
+      let _this = this;
+      $wuxSelect('#wux-select1').open({
+        value: _this.baseForm.sex,
+        options: ['男', '女'],
+        onConfirm: (value, index, options) => {
+          console.log('onConfirm', value, index, options);
+          if (index !== -1) {
+            _this.baseForm.sex = options[index];
+            _this.$apply();
+          }
+        }
+      });
+    }
+  };
+
+  events = {};
+
+  onLoad() {
+    this.userInfo = wepy.getStorageSync(USER_INFO);
+  }
+}
+</script>
+
+<style lang="less">
+.info-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>

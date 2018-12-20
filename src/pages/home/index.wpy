@@ -1,0 +1,301 @@
+<template>
+  <view class="pv-20 bg-white">
+    <!-- 顶部搜索 -->
+    <view class="flex align-center mb-20">
+      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
+      <view class="pv-20" style="flex-grow:1;">
+        <!-- <wux-search-bar @tap="tapSearchBar" clear=""/> -->
+        <wux-button size="small" @tap="tapSearchBar" block outline type="light">
+          <wux-icon type="ios-search" size="16"/>Search
+        </wux-button>
+      </view>
+      <wux-popover placement="bottomRight" title="消息列表">
+        <view slot="content">
+          <view @tap="tapMessage" data-id="1">故障消息：2</view>
+          <view @tap="tapMessage" data-id="2">推广消息：1</view>
+          <view @tap="tapMessage" data-id="3">公司消息：2</view>
+        </view>
+        <wux-badge count="5">
+          <wux-icon type="ios-mail"/>
+        </wux-badge>
+      </wux-popover>
+    </view>
+    <!-- 轮播 -->
+    <view class="swiper">
+      <swiper
+        indicator-dots="true"
+        autoplay="true"
+        interval="5000"
+        duration="500"
+        indicator-active-color="#ffc452"
+        indicator-color="#efefef"
+        class="swiper"
+      >
+        <block wx:for="{{swiperList}}" key="item" item="item" wx:key="key">
+          <swiper-item>
+            <image src="{{item.img}}" data-src="{{item.img}}" style="width:100%">
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <!-- 定位 -->
+    <view class="flex justify-space-between align-center ph-20 ">
+      <view @tap="tapLocation" class="flex align-center" style="flex-grow:1;">
+        <wux-icon type="ios-pin"/>
+        <text class="wux-ellipsis pl-20" style="width:300rpx">{{location.address||'发现'}}</text>
+      </view>
+      <view @tap="tapSort">排序</view>
+      <!-- <wux-filterbar items="{{ items }}" @change="filterChange"/> -->
+    </view>
+    <wux-media
+      @tap="tapShop"
+      wx:for="{{shopList}}"
+      data-id="{{item.id}}"
+      thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+      thumb-style="border-radius: 50%"
+    >
+      <view class="flex justify-space-between pv-20">
+        <text class="wux-ellipsis">{{item.name}}</text>
+        <text class="wux-ellipsis">{{item.distanceText}}</text>
+      </view>
+    </wux-media>
+    <wux-button wx:if="{{hasMore}}" block size="small" @tap="tapLoadMore" type="positive">加载更多</wux-button>
+    <i-load-more loading="{{ loading }}" />
+
+    <wux-popup
+      closable
+      visible="{{ locationPop }}"
+      title="定位"
+      content="请求获取定位权限"
+      @close="onCloseLocationPop"
+    >
+      <wux-button openType="openSetting" @opensetting="onOpenSetting" block type="balanced">确认</wux-button>
+    </wux-popup>
+    <wux-select id="wux-select1"/>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/tip';
+import { $wuxSelect } from '../../wux/index';
+
+export default class home extends wepy.page {
+  config = {
+    navigationBarTitleText: '聚微超',
+    navigationBarBackgroundColor: '#ffc900',
+    backgroundColor: '#eee',
+    usingComponents: {
+      'wux-popup': '../../wux/popup/index',
+      'wux-button': '../../wux/button/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-badge': '../../wux/badge/index',
+      'wux-card': '../../wux/card/index',
+      'wux-filterbar': '../../wux/filterbar/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-search-bar': '../../wux/search-bar/index',
+      'wux-popover': '../../wux/popover/index',
+      'wux-media': '../../wux/media/index',
+            'wux-select': '../../wux/select/index',
+                "i-load-more": "../../iview/load-more/index"
+
+
+    }
+  };
+  components = {};
+
+  data = {
+    loading:false,
+    wuxSelect:null,
+    hasMore: true,
+    authSetting: {},
+    locationPop: false,
+    swiperList: [
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
+      },
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      }
+    ],
+    shopList: [],
+    shopList0: [
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 1,
+        distanceText: '700m'
+      },
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 2,
+        distanceText: '800m'
+      }
+    ],
+    shopList1: [
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 5,
+        distanceText: '800m'
+      },
+      {
+        name: '48V充电柜   沃尔玛停车场',
+        id: 6,
+        distanceText: '1.4km'
+      }
+    ],
+    location: {},
+    items: [
+      {
+        type: 'sort',
+        label: 'distances',
+        value: 'stars',
+        groups: ['001']
+      }
+    ],
+    sort: 'distance'
+  };
+
+  computed = {};
+
+  methods = {
+    tapShop(e) {
+      let { id } = e.currentTarget.dataset;
+      wepy.navigateTo({ url: '/pages/shops/shop?id=' + id });
+    },
+    onOpenSetting(e) {
+      this.locationPop = false;
+      this.$apply();
+      this.authSetting = e.detail.authSetting;
+      if (e.detail.authSetting['scope.userLocation']) {
+        this._getLocation();
+      }
+    },
+    onCloseLocationPop(e) {
+      this.locationPop = false;
+      this.$apply();
+    },
+    async tapLocation(e) {
+      try {
+        if (!this.authSetting['scope.userLocation']) {
+          this.locationPop = true;
+          this.$apply();
+          return;
+        }
+        let res = await wepy.chooseLocation();
+        console.log(res);
+        this.location = res;
+        this.$apply();
+      } catch (error) {}
+    },
+    filterChange(e) {
+      const { checkedItems, items } = e.detail;
+      checkedItems.forEach(n => {
+        if (n.checked) {
+          if (n.sort === 1) {
+            this.shopList = this.shopList.sort(
+              (a, b) => b.distance - a.distance
+            );
+          } else {
+            this.shopList = this.shopList.sort(
+              (a, b) => a.distance - b.distance
+            );
+          }
+          if (this.shopList.length === 3) {
+            this.shopList = n.sort === 1 ? this.shopList0 : this.shopList1;
+          }
+          this.$apply();
+        }
+      });
+      console.log(e);
+    },
+    tapSearchBar(e) {
+      wepy.navigateTo({ url: '/pages/search' });
+    },
+    tapMessage(e) {
+      console.log(e.currentTarget.dataset.id);
+      let id = e.currentTarget.dataset.id;
+      wepy.navigateTo({ url: '/pages/messages/index?tab=' + id });
+    },
+    async tapScan(e) {
+      try {
+        let res = await wepy.scanCode({
+          onlyFromCamera: false //是否只能从相机扫码，不允许从相册选择图片,
+        });
+        console.log(res.result);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    tapLoadMore() {
+      this.shopList = [...this.shopList0, ...this.shopList1].sort(
+        (a, b) => a.distance - b.distance
+      );
+      this.hasMore = false;
+      this.$apply();
+    }
+  };
+
+  events = {};
+
+  onLoad() {
+    this.shopList = this.shopList0;
+    this.getLocation();
+  }
+  async _getLocation() {
+    try {
+      let res = await wepy.getLocation({
+        type: 'gcj02' //默认为 wgs84 返回 gps 坐标，gcj02 返回可用于wepy.chooseLocation的坐标,
+      });
+      this.location = Object.assign(this.location, res);
+      console.log(res);
+    } catch (error) {}
+  }
+  async getLocation() {
+    let res = await wepy.getSetting();
+    this.authSetting = res.authSetting;
+    if (res.authSetting['scope.userLocation']) {
+      this._getLocation();
+    } else if (res.authSetting['scope.userLocation'] == undefined) {
+      try {
+        wepy.authorize({
+          scope: 'scope.userLocation'
+        });
+        this._getLocation();
+      } catch (error) {}
+    } else {
+      this.locationPop = true;
+      this.$apply();
+    }
+  }
+  onReachBottom(){
+    this.loading = true;
+          this.$apply();
+
+    setTimeout(() => {
+      this.loading = false;
+      this.$apply();
+    }, 2000);
+}
+  tapSort(e) {
+    let that = this;
+    
+$wuxSelect('#wux-select1').open({
+      value: that.sort,
+      options: ['距离', '...'],
+      onConfirm: (value, index, options) => {
+        console.log('onConfirm', value, index, options);
+        if (index !== -1) {
+          that.sort = options[index];
+          that.$apply();
+        }
+      }
+    });
+  }
+}
+</script>
+
+<style>
+</style>

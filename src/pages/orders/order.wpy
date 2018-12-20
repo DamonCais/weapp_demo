@@ -1,0 +1,50 @@
+<template>
+  <view class="p-20">
+    <wux-card title="订单详情">
+      <view slot="body">交易编号: {{orderId}}</view>
+      <view style="width:100%;" class="flex justify-flex-end" slot="footer">￥20.00</view>
+    </wux-card>
+    <view class="order-footer flex">
+      <view class="flex-grow p-20 text-center bg-white lh-60 order-btn">放弃订单</view>
+      <view class="flex-grow p-20 text-center wux-balanced--bg lh-60 order-btn">去支付</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class order extends wepy.page {
+  config = {
+    navigationBarTitleText: '订单详情',
+    usingComponents: {
+      'wux-card': '../../wux/card/index'
+    }
+  };
+  components = {};
+
+  data = {
+    orderId: ''
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad(option) {
+    console.log(option.id);
+    this.orderId = option.id;
+    this.$apply();
+  }
+}
+</script>
+
+<style lang="less">
+.order-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+</style>

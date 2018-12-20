@@ -1,0 +1,212 @@
+<template>
+  <view style="height:100%;" class="p-40 flex column justify-space-between">
+        <!-- 轮播 -->
+    <view class="swiper">
+      <swiper
+        indicator-dots="true"
+        autoplay="true"
+        interval="5000"
+        duration="500"
+        indicator-active-color="#ffc452"
+        indicator-color="#efefef"
+        class="swiper"
+      >
+        <block wx:for="{{swiperList}}" key="item" item="item" wx:key="key">
+          <swiper-item>
+            <image src="{{item.img}}" data-src="{{item.img}}" style="width:100%">
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view wx:if="{{!userInfo.nickName}}">
+      <view class="text-center">申请获取以下权限：</view>
+      <view class="text-center">获取你的公开信息（头像、昵称等）</view>
+      <wux-button open-type="getUserInfo" type="balanced" block bindgetuserinfo="onGotUserInfo">授权</wux-button>
+    </view>
+    <view wx:if="{{userInfo.nickName}}">
+      <wux-cell>
+        <wux-input value="{{phone}}" controlled label="手机号"></wux-input>
+      </wux-cell>
+      <wux-cell>
+        <wux-input controlled value="{{sms}}" label="验证码">
+          <view slot="footer">
+            <wux-button size="small" @tap="tapSms" wx:if="{{!countSec}}" type="balanced">{{smsBtn}}</wux-button>
+            <wux-button size="small" wx:if="{{countSec}}" clear="" type="balanced">{{countSec}}</wux-button>
+          </view>
+        </wux-input>
+      </wux-cell>
+      <view class="flex justify-center align-center ph-20">
+        <view style="zoom:50%;display:inline-block">
+          <checkbox @change="onCheckboxChange" checked="{{isAgree}}"/>
+        </view>我同意
+        <!-- <wux-selectable  controlled checked="{{isAgree}}"></wux-selectable> -->
+        <text @tap="confirm" style="color:green;text-decoration:underline;line-height:23px;">服务协议</text>
+      </view>
+      <wux-button loading="{{loading}}" @tap="tapBindPhone" block type="balanced">绑定手机</wux-button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/tip';
+import { $wuxCountDown } from '../wux/index';
+// import { $wuxDialog } from '../wux/index';
+
+import { SYSTEM_INFO, USER_SPECICAL_INFO, USER_INFO } from '@/utils/constant';
+export default class Authorize extends wepy.page {
+  config = {
+    navigationBarTitleText: '登录',
+    usingComponents: {
+      'wux-cell-group': '../wux/cell-group/index',
+      'wux-button': '../wux/button/index',
+      'wux-tag': '../wux/tag/index',
+      'wux-cell': '../wux/cell/index',
+      'wux-input': '../wux/input/index',
+      'wux-selectable': '../wux/selectable/index',
+      'wux-dialog': '../wux/dialog/index'
+    }
+  };
+  data = {
+    show: false,
+    countDown: '',
+    countSec: '',
+    smsBtn: '获取验证码',
+    userInfo: {},
+    isAgree: false,
+    phone: '13728119700',
+    sms: '1234',
+    loading: false,
+        swiperList: [
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
+      },
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      }
+    ],
+  };
+  async onLoad() {
+    let res = await wepy.getSetting();
+    console.log(res);
+    if (res.authSetting['scope.userInfo']) {
+      this.userInfo = wepy.getStorageSync(USER_INFO);
+      this.$apply();
+      if (!this.userInfo.nickName) {
+        let data = await wepy.getUserInfo();
+        this.userInfo = data.userInfo;
+        this.$apply();
+        if (data) {
+          wepy.setStorageSync(USER_INFO, data.userInfo);
+        }
+        let res = await wepy.login();
+        if (res.code) {
+          let systemInfo = wepy.getSystemInfoSync();
+          wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+        }
+      }
+      // wepy.switchTab({
+      //   url: '/pages/vip/index'
+      // });
+    }
+  }
+
+  async onGotUserInfo(e) {
+    if (e.detail.errMsg == 'getUserInfo:ok') {
+      let res = await wepy.login();
+      if (res.code) {
+        this.userInfo = e.detail.userInfo;
+        this.$apply();
+
+        wepy.setStorageSync(USER_INFO, e.detail.userInfo);
+        let systemInfo = wepy.getSystemInfoSync();
+        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
+        // wepy.switchTab({
+        //   url: '/pages/vip/index'
+        // });
+      }
+    }
+  }
+  tapSms() {
+    if (this.countDown && this.countDown.interval) return !1;
+    let that = this;
+    this.countDown = new $wuxCountDown({
+      date: +new Date() + 60000,
+      onEnd() {
+        that.countSec = '';
+        that.smsBtn = '重新获取验证码';
+        that.$apply();
+      },
+      render(date) {
+        const sec = this.leadingZeros(date.sec, 2) + ' 秒 ';
+        if (date.sec !== 0) {
+          that.countSec = date.sec;
+          that.$apply();
+        }
+      }
+    });
+  }
+  async tapBindPhone() {
+    try {
+      let res = await this.validate();
+      this.loading = true;
+      this.$apply();
+      setTimeout(() => {
+        wepy.switchTab({
+          url: '/pages/home/index'
+        });
+      }, 3000);
+    } catch (error) {
+      tip.error(error);
+    }
+  }
+  validate() {
+    return new Promise((resolve, reject) => {
+      if (!this.phone) {
+        reject('请输入手机号');
+      } else if (!this.sms) {
+        reject('请输入验证码');
+      }
+      resolve();
+    });
+  }
+  onCheckboxChange(e) {
+    console.log(e);
+    // this.isAgree = e.detail.checked;
+    // this.$apply();
+  }
+  async confirm() {
+    let res = await tip.confirm('用户服务协议内容', {}, '用户协议');
+    console.log(res);
+    this.isAgree = true;
+    this.$apply();
+  }
+  events = {};
+}
+</script>
+<style lang="less">
+page {
+  height: 100%;
+}
+
+.authorize-contianer {
+  height: 100%;
+  background: #fff;
+  text-align: center;
+  padding-top: 100rpx;
+  .authorize-icon {
+    width: 128rpx;
+    height: 128rpx;
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 10rpx;
+  }
+  .auth-item {
+    padding: 5rpx 0;
+  }
+  .btn-authorize {
+    margin: 100rpx 50rpx;
+  }
+}
+</style>

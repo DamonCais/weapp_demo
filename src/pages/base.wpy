@@ -1,0 +1,27 @@
+<template>
+  <view class="p-20"></view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class base extends wepy.page {
+  config = {
+    navigationBarTitleText: 'test',
+    usingComponents: {}
+  };
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style>
+</style>

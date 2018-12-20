@@ -1,0 +1,117 @@
+<template>
+  <view>
+    <wux-tabs wux-class="bordered" controlled current="{{ current }}" @change="onTabsChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <wux-tab key="{{ item.key }}">
+          <wux-badge count="{{item.count}}">{{item.title}}</wux-badge>
+        </wux-tab>
+      </block>
+    </wux-tabs>
+    <view class="p-20">
+      <view wx:for="{{messages}}" class="mb-20">
+        <wux-card title="{{item.title}}" extra="{{item.time}}">
+          <view slot="body">{{item.content}}</view>
+          <view style="width:100%;" class="flex justify-flex-end" slot="footer">
+            <wux-button wx:if="{{item.status=='read'}}" block size="small" type="assertive">已读</wux-button>
+            <wux-button wx:if="{{item.status=='unread'}}" block size="small" type="calm">未读</wux-button>
+          </view>
+        </wux-card>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class message extends wepy.page {
+  config = {
+    navigationBarTitleText: 'message',
+    usingComponents: {
+      'wux-button': '../../wux/button/index',
+      'wux-tabs': '../../wux/tabs/index',
+      'wux-tab': '../../wux/tab/index',
+      'wux-badge': '../../wux/badge/index',
+      'wux-card': '../../wux/card/index'
+    }
+  };
+  components = {};
+
+  data = {
+    current: 'fault',
+    currentIndex: 0,
+    tabs: [
+      {
+        key: 'fault',
+        title: '故障消息',
+        count: 2
+      },
+      {
+        key: 'promoted',
+        title: '推广消息',
+
+        count: 1
+      },
+      {
+        key: 'company',
+        title: '公司消息',
+
+        count: 2
+      }
+    ],
+    messages: [],
+    baseMessages: [
+      {
+        title: '电瓶故障',
+        content: '你的电瓶发生故障',
+        status: 'unread',
+        time: '12-18 14:20',
+
+        type: 'fault'
+      },
+      {
+        title: '优惠活动',
+        content: '开业大酬宾',
+        status: 'read',
+        time: '12-18 15:50',
+
+        type: 'promoted'
+      },
+      {
+        title: '公司活动',
+        content: '你的电瓶发生故障',
+        status: 'unread',
+        time: '12-18 15:20',
+
+        type: 'company'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    onTabsChange(e) {
+      console.log('onTabsChange', e);
+      const { key } = e.detail;
+      const index = this.data.tabs.map(n => n.key).indexOf(key);
+      this.current = key;
+      this.messages = this.baseMessages.filter(m => m.type == this.current);
+      this.$apply();
+    }
+  };
+
+  events = {};
+
+  onLoad(options) {
+    console.log(options);
+    let { tab } = options;
+    let index = 1 * tab - 1 || 0;
+    this.current = this.tabs[index].key;
+    this.messages = this.baseMessages.filter(m => m.type == this.current);
+    this.$apply();
+  }
+}
+</script>
+
+<style>
+</style>

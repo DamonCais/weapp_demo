@@ -1,0 +1,206 @@
+<template>
+  <view class="">
+    <view class="mb-20">
+      <scroll-view
+        @scroll="scroll"
+        scroll-left="{{scrollLeft}}"
+        scroll-into-view="{{toView}}"
+        scroll-x="{{scrollX}}"
+        scroll-with-animation
+        class="boxs"
+      >
+        <view id="box0" class="empty-box">
+          <image>
+        </view>
+        <view
+          wx:for="{{swiperList}}"
+          style="{{currentIndex==index+1?'padding:10rpx;':'padding:40rpx;'}}"
+          class="box"
+        >
+          <image class="box-img" style="width:100%" src="{{item.img}}">
+          <view class="title flex column">
+            <text class="fs-36"> {{item.title}}</text>
+            <text  class="fs-48"> {{item.price}}元</text>
+          </view>
+        </view>
+        <!-- <view id="box2" style="{{currentIndex==2?'padding:10rpx;':'padding:40rpx;'}}" class="box">
+        <image
+          class="box-img"
+          src="http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg"
+          style="width:100%"
+        >
+                <text class="title">3个月会员</text>
+
+      </view>
+      <view id="box3" style="{{currentIndex==3?'padding:10rpx;':'padding:40rpx;'}}" class="box ">
+        <image
+          class="box-img"
+          src="http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg"
+          style="width:100%"
+        >
+                <text class="title">半年会员</text>
+
+      </view>
+      <view id="box4" style="{{currentIndex==4?'padding:10rpx;':'padding:40rpx;'}}" class="box">
+        <image
+          class="box-img"
+          src="http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg"
+          style="width:100%"
+        >
+                <text class="title">一年会员</text>
+
+        </view>-->
+        <view id="box5" class="empty-box">
+          <image>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="mt-20">
+      <wux-tabs controlled current="{{ current }}" @change="onTabsChange">
+        <wux-tab key="box1" title="1个月会员"></wux-tab>
+        <wux-tab key="box2" title="3个月会员"></wux-tab>
+        <wux-tab key="box3" title="6个月会员"></wux-tab>
+        <wux-tab key="box4" title="1年会员"></wux-tab>
+      </wux-tabs>
+
+    </view>
+    <view class="p-20">
+      当前会员有效期：20天
+    </view>
+        <view class="footer pv-20 bg-white border-box">
+      <wux-button @tap="tapPaid" block type="balanced">马上升级</wux-button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class base extends wepy.page {
+  config = {
+    navigationBarTitleText: '会员卡',
+    usingComponents: {
+      'wux-tabs': '../../wux/tabs/index',
+      'wux-tab': '../../wux/tab/index',
+            'wux-button': '../../wux/button/index',
+
+    }
+  };
+  components = {};
+
+  data = {
+    scrollX: false,
+    current: 'box1',
+    toView: 'box1',
+    scrollLeft: '0rpx',
+    currentIndex: 1,
+    leftNums: [0, 234, 469, 700],
+    swiperList: [
+      {
+        price:'100',
+        title: '1个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
+      },
+      {
+                price:'200',
+
+        title: '3个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      },
+      {
+                price:'300',
+
+        title: '6个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg'
+      },
+      {
+                price:'400',
+
+        title: '1年会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+        tapPaid(e){
+      // wepy.navigateTo({ url: '/pages/vip/recharge' });
+      
+    },
+    scroll(e) {
+      console.log(e);
+    },
+    onTabsChange(e) {
+      this.scrollX = true;
+
+      setTimeout(() => {
+        console.log(e);
+        const { key } = e.detail;
+        console.log(key);
+
+        let index = 1 * key.substr(3, 1);
+        this.currentIndex = index;
+        this.scrollLeft = (index - 1) * 550 + 'rpx';
+        this.current = key;
+        this.scrollX = false;
+        this.$apply();
+      }, 20);
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.boxs {
+  height: 800rpx;
+  white-space: nowrap;
+}
+.empty-box {
+  display: inline-block;
+  height: 800rpx;
+  width: 100rpx;
+  box-sizing: border-box;
+  image {
+    border-radius: 10rpx;
+    width: 100%;
+    height: 100%;
+  }
+}
+.box {
+  display: inline-block;
+  height: 800rpx;
+  width: 550rpx;
+  box-sizing: border-box;
+  // padding: 40rpx;
+  position: relative;
+  image {
+    border-radius: 10rpx;
+    width: 100%;
+    height: 100%;
+  }
+  .title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    line-height: 50rpx;
+    padding: 20rpx;
+  }
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+</style>

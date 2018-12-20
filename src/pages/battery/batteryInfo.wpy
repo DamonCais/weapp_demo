@@ -1,0 +1,109 @@
+<template>
+  <view>
+    <wux-cell extra="abc123" is-link @tap="tapScan" title="我的电池码"></wux-cell>
+    <view class="p-20">
+      <wux-card title="换电须知">
+        <view slot="body">请确保电池完好无损，如果电池发生膨胀等异常状况，请与工作人员联系</view>
+        <view slot="footer">特别提醒：请选择相同规格的电池</view>
+      </wux-card>
+    </view>
+    <wux-cell-group title="电池问卷">
+      <editList1 :form.sync="baseForm"/>
+    </wux-cell-group>
+    <wux-cell-group title="费用信息">
+      <wux-cell title="合计" extra="￥20"></wux-cell>
+    </wux-cell-group>
+    <view class="p-20">
+      <wux-button block size="small" data-id="{{id}}" @tap="tapPaid" type="positive">需要支付</wux-button>
+    </view>
+    <view class="p-20">
+      <wux-button block size="small" data-id="{{id}}" @tap="tapBattery" type="positive">马上换电</wux-button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import editList from '@/components/editList';
+
+export default class base extends wepy.page {
+  config = {
+    navigationBarTitleText: '换电须知',
+    usingComponents: {
+      'wux-card': '../../wux/card/index',
+      'wux-wing-blank': '../../wux/wing-blank/index',
+      'wux-accordion-group': '../../wux/accordion-group/index',
+      'wux-accordion': '../../wux/accordion/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-grids': '../../wux/grids/index',
+      'wux-grid': '../../wux/grid/index',
+      'wux-button': '../../wux/button/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-input': '../../wux/input/index',
+      'wux-media': '../../wux/media/index',
+      'wux-tag': '../../wux/tag/index',
+      'wux-select': '../../wux/select/index',
+      'i-input': '../../iview/input/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index'
+    }
+  };
+  components = {
+    editList1: editList
+  };
+
+  data = {
+    id: 'abc123',
+    baseForm: {
+      type: {
+        label: '电池大小',
+        value: '',
+        type: 'picker',
+        options: ['48V', '36V']
+      },
+      status: {
+        label: '电池状态',
+        value: '',
+        type: 'picker',
+        options: ['完好无损', '轻微发热']
+      },
+      notes: {
+        label: '特别说明',
+        value: ''
+      }
+    }
+  };
+
+  computed = {};
+
+  methods = {
+    tapPaid(e) {
+      let { id } = e.currentTarget.dataset;
+      wepy.navigateTo({ url: '/pages/orders/order?id=' + id });
+    },
+    tapBattery(e) {
+      let { id } = e.currentTarget.dataset;
+      wepy.navigateTo({ url: '/pages/battery/exchange' });
+    },
+    async tapScan(e) {
+      try {
+        let res = await wepy.scanCode({
+          onlyFromCamera: false //是否只能从相机扫码，不允许从相册选择图片,
+        });
+        console.log(res.result);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style>
+</style>

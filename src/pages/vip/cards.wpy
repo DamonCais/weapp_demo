@@ -1,0 +1,175 @@
+<template>
+  <view>
+    <view>
+      <!-- <swiper
+        indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoplay}}"
+        interval="{{interval}}"
+        duration="{{duration}}"
+        circular="{{circular}}"
+        current="{{ currentIndex }}"
+        previous-margin="100rpx"
+        next-margin="100rpx"
+        @change="swiperChange"
+        @animationfinish="animationfinish"
+        class="swiper"
+      >
+        <view wx:for="{{swiperList}}">
+          <swiper-item>
+            <view class="item-wrapper" style="padding:{{ currentIndex===index?'20rpx':'60rpx'}}">
+              <view class="item-border bg-white flex column">
+                <image src="{{item.img}}" class="slide-image">
+                <view class="p-20 flex column justify-space-between flex-grow">
+                  <view class="flex justify-space-between fs-48">
+                    <text class="c000">{{item.title}}</text>
+                    <text class="c333">￥{{item.price}}</text>
+                  </view>
+                  <view class="c666 fs-36">会员卡内容</view>
+                  <view class="c999 fs-24">会员卡说明</view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </view>
+      </swiper>-->
+
+      <mySwiper
+        :currentIndex.sync="currentIndex"
+        :swiperList.sync="swiperList"
+        @swiperChange.user="swiperChange"
+        swiperHeight="800rpx"
+      ></mySwiper>
+    </view>
+    <view class="mt-20">
+      <i-tabs scroll current="{{ currentIndex }}" @change="onTabsChange">
+        <i-tab wx:for="{{swiperList}}" key="{{index}}" >
+          <view class="ph-20 flex column align-center justify-center "
+          style="zoom:{{currentIndex==index?'1.3':'1'}};"
+          >
+            <image
+              src="{{item.img}}"
+              
+              style="border-radius: 20rpx;width: 20px; height: 20px; margin-right: 5px;"
+            >
+            <text clss="fs-24">{{item.title}}</text>
+          </view>
+        </i-tab>
+      </i-tabs>
+      <!-- <jvc-tabs  controlled current="{{ currentIndex }}" @change="onTabsChange">
+        <jvc-tab wx:for="{{swiperList}}" key="{{index}}">
+          <view class="p-20 flex column align-center justify-center "
+          style="zoom:{{currentIndex==index?'1.3':'1'}};"
+          >
+            <image
+              src="{{item.img}}"
+              
+              style="border-radius: 20rpx;width: 20px; height: 20px; margin-right: 5px;"
+            >
+            <text>{{item.title}}</text>
+          </view>
+        </jvc-tab>
+      </jvc-tabs>-->
+    </view>
+    <view class="p-20">当前会员有效期：20天</view>
+    <view class="footer pv-20 bg-white border-box">
+      <wux-button @tap="tapPaid" block type="balanced">马上续费</wux-button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import mySwiper from '@/components/swiper';
+export default class cards extends wepy.page {
+  config = {
+    navigationBarTitleText: '会员卡',
+    usingComponents: {
+      'jvc-tabs': '../../wux/jvc_tabs/index',
+      'jvc-tab': '../../wux/jvc_tab/index',
+      'wux-button': '../../wux/button/index',
+      'wux-card': '../../wux/card/index',
+      'i-tabs': '../../iview/tabs/index',
+      'i-tab': '../../iview/tab/index'
+    }
+  };
+  components = {
+    mySwiper: mySwiper
+  };
+
+  data = {
+    indicatorDots: false,
+    autoplay: false,
+    interval: 5000,
+    duration: 900,
+    circular: false,
+    currentIndex: 0,
+    swiperList: [
+      {
+        price: '100',
+        title: '1个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
+      },
+      {
+        price: '200',
+        title: '2个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_f10ecd1d1fd2ee2fc6bcbc08382af5c9.jpg'
+      },
+
+      {
+        price: '250',
+
+        title: '3个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      },
+      {
+        price: '300',
+
+        title: '6个月会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg'
+      },
+      {
+        price: '500',
+
+        title: '1年会员',
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg'
+      }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    tapPaid(e) {
+      // wepy.navigateTo({ url: '/pages/vip/recharge' });
+    },
+    swiperChange(e) {
+      console.log(e);
+      // let { current } = e.detail;
+      // this.currentIndex = current;
+    },
+    onTabsChange(e) {
+      const { key } = e.detail;
+      this.currentIndex = 1 * key;
+    },
+    animationfinish(e) {}
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+</style>

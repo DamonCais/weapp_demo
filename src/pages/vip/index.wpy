@@ -1,0 +1,178 @@
+<template>
+  <view>
+    <view class="wux-energized--bg p-20">
+      <!-- <wux-media @tap="tapUserInfo"  thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
+        <view style="height:100%;" class="flex justify-space-between align-center pv-20">
+          <view class="c333 ">
+            {{userInfo.nickName}}
+            <wux-tag class="pl-20" color="green">普通会员</wux-tag>
+          </view>
+          <view @tap.stop="tapVipInfo" class="c999 fs-24">会员说明</view>
+        </view>
+      </wux-media>-->
+
+      <media @tapThumb.user="tapUserInfo" :thumb.sync="avatarUrl" thumbStyle="border-radius: 50%" >
+          <view style="height:100%;" class="flex justify-space-between align-center pv-20">
+          <view class="c333 " @tap="tapUserInfo">
+            {{userInfo.nickName}}
+            <wux-tag @tap.stop="tapVipInfo" class="pl-20" color="green">普通会员</wux-tag>
+          </view>
+          <view @tap.stop="tapVipInfo" class="666 fs-24">会员说明</view>
+        </view>
+      </media>
+    </view>
+    <view class="p-20">
+      <view class="flex justify-center align-center p-20 bg-white vip-tabs">
+        <view  @tap="tapWallet" class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+          <text>0</text>
+          <text>余额</text>
+        </view>
+        <view @tap="tapCards" class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+          <text>1</text>
+          <text>会员卡</text>
+        </view>
+        <view class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+          <text>2</text>
+          <text>红包</text>
+        </view>
+        <view class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+          <text>20</text>
+          <text>积分</text>
+        </view>
+      </view>
+    </view>
+    <view>
+      <image
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544763965330&di=a484102f33d3721555a4632fcb93ab70&imgtype=0&src=http%3A%2F%2Fpic90.huitu.com%2Fres%2F20161116%2F804858_20161116180047869020_1.jpg"
+        data-src="{{item.img}}"
+        style="width:100%;height:200rpx"
+      >
+    </view>
+    <wux-cell-group>
+      <!-- <wux-cell title="会员权益" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>-->
+      <wux-cell title="交易记录" @tap="tapOrders" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+      <wux-cell title="我的钱包" @tap="tapWallet" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+      <wux-cell  @tap="tapCards" title="会员积分" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+      <wux-cell title="优惠券" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+      <wux-cell title="更换手机号" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+      <wux-cell title="关于" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      </wux-cell>
+    </wux-cell-group>
+    <view class="p-20">
+    <wux-button type="positive" block>退出登录</wux-button>
+
+    </view>
+    <wux-popup closable visible="{{ visible }}" title="会员权益说明" @close="onClose">
+      <view class="p-20" style="text-align:left;">
+        <view>1.你的会员等级是普通会员，租车免费</view>
+        <view>2.你的会员有效期</view>
+        <view>3.你的xxxxx</view>
+        <view>4.</view>
+      </view>
+    </wux-popup>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import { SYSTEM_INFO, USER_SPECICAL_INFO, USER_INFO } from '@/utils/constant';
+import media from '@/components/media';
+export default class vip extends wepy.page {
+  config = {
+    navigationBarTitleText: '会员',
+    navigationBarBackgroundColor: '#ffc900',
+    backgroundColor: '#ffc900',
+    usingComponents: {
+      'wux-icon': '../../wux/icon/index',
+      'wux-grids': '../../wux/grids/index',
+      'wux-grid': '../../wux/grid/index',
+      'wux-button': '../../wux/button/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-media': '../../wux/media/index',
+      'wux-tag': '../../wux/tag/index',
+      'wux-popup': '../../wux/popup/index',
+
+      'i-load-more': '../../iview/load-more/index'
+    }
+  };
+  components = {
+    media: media
+  };
+
+  data = {
+    userInfo: {
+    },
+    
+    visible: false
+  };
+
+  computed = {
+    avatarUrl(){
+      return this.userInfo.avatarUrl||'';
+    }
+  };
+
+  methods = {
+    tapCards(){
+      wepy.navigateTo({ url: '/pages/vip/cards' });
+    },
+    tapThumb() {
+      console.log('tapThumb');
+    },
+    tapUserInfo() {
+      wepy.navigateTo({ url: '/pages/vip/info' });
+    },
+    tapWallet(){
+      wepy.navigateTo({ url: '/pages/vip/wallet' });
+    },
+    tapVipInfo() {
+      this.visible = true;
+      this.$apply();
+    },
+    tapOrders() {
+      wepy.navigateTo({ url: '/pages/orders/index' });
+    },
+    onClose() {
+      this.visible = false;
+      this.$apply();
+    }
+  };
+
+  events = {};
+
+  onLoad() {
+    this.userInfo = wepy.getStorageSync(USER_INFO);
+    this.avatarUrl = this.userInfo.avatarUrl;
+    this.$apply();
+  }
+}
+</script>
+
+<style lang="less">
+.vip-tabs {
+  border-radius: 20rpx;
+  .vip-tab + .vip-tab {
+    border-left: 1px solid #ccc;
+  }
+}
+.vip-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10rpx;
+}
+</style>
