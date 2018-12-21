@@ -1,15 +1,38 @@
 <template>
   <view style="height:100%;" class="p-40 flex column justify-space-between">
-        <!-- 轮播 -->
-    <view class="swiper">
+    <view class="bg-cover">
       <swiper
-        indicator-dots="true"
         autoplay="true"
         interval="5000"
         duration="500"
-        indicator-active-color="#ffc452"
-        indicator-color="#efefef"
+        current="{{ currentIndex }}"
+        @change="swiperChange"
         class="swiper"
+        circular
+      >
+        <block wx:for="{{swiperList}}" key="item" item="item" wx:key="key">
+          <swiper-item>
+            <image src="{{item.img}}" data-src="{{item.img}}" class="swiper-image">
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <!-- 轮播 -->
+    <view class="">
+      <view class="flex align-center justify-center mb-20">
+        <image
+        class="radio-circle"
+        style="width:100rpx;height:100rpx; "
+         src="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg">
+        <text class="pl-20">聚微超</text>
+      </view>
+      <swiper
+        autoplay="true"
+        interval="5000"
+        duration="500"
+        current="{{ currentIndex }}"
+        @change="swiperChange"
+        circular
       >
         <block wx:for="{{swiperList}}" key="item" item="item" wx:key="key">
           <swiper-item>
@@ -70,22 +93,36 @@ export default class Authorize extends wepy.page {
     show: false,
     countDown: '',
     countSec: '',
+    currentIndex: 0,
     smsBtn: '获取验证码',
     userInfo: {},
     isAgree: false,
     phone: '13728119700',
     sms: '1234',
     loading: false,
-        swiperList: [
+    swiperList: [
       {
         img:
           'http://mp.jycais.cn/uploadDir/upload_5548fba640bf6b14339cfc14ba109377.jpg'
       },
       {
         img:
+          'http://mp.jycais.cn/uploadDir/upload_f10ecd1d1fd2ee2fc6bcbc08382af5c9.jpg'
+      },
+
+      {
+        img:
           'http://mp.jycais.cn/uploadDir/upload_c72d03d49a333bdd464075cadf9d6705.jpg'
+      },
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg'
+      },
+      {
+        img:
+          'http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg'
       }
-    ],
+    ]
   };
   async onLoad() {
     let res = await wepy.getSetting();
@@ -183,13 +220,36 @@ export default class Authorize extends wepy.page {
     this.$apply();
   }
   events = {};
+  methods = {
+    swiperChange(e) {
+      let { current } = e.detail;
+      this.currentIndex = current;
+    }
+  };
 }
 </script>
 <style lang="less">
 page {
   height: 100%;
 }
+.bg-cover {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -2;
+  .swiper {
+    height: 100%;
 
+    .swiper-image {
+      filter: blur(10px);
+
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
 .authorize-contianer {
   height: 100%;
   background: #fff;

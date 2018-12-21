@@ -1,0 +1,113 @@
+<template>
+  <view>
+    <view class="wux-balanced--bg p-20">
+      <wux-media thumb="http://mp.jycais.cn/uploadDir/upload_f10ecd1d1fd2ee2fc6bcbc08382af5c9.jpg">
+        <view class="flex justify-space-between column pv-20">
+          <view class="c000">{{shopId}}号营业部</view>
+          <view class="c333">提供：租车、换电、加盟服务</view>
+        </view>
+      </wux-media>
+    </view>
+    <wux-cell-group title="我要换电">
+      <view class="pv-20 mb-20">
+        <wux-media
+          thumb="http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg"
+        >
+          <view class="flex justify-space-between column pv-20">
+            <view class="c000">我的电瓶：abc123</view>
+            <view class="c333">电瓶参数：48V</view>
+          </view>
+        </wux-media>
+        <wux-button block size="small" @tap="tapBattery" type="positive">马上换电</wux-button>
+      </view>
+    </wux-cell-group>
+    <wux-cell-group title="我要租车">
+      <view class="pv-20 mb-20">
+        <wux-media
+          wx:for="{{carList}}"
+          thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+        >
+          <view class="flex justify-space-between pv-20">
+            <view class="flex column justify-space-between">
+              <view class="c000">车辆信息</view>
+              <view class="c333">车辆参数：48V</view>
+            </view>
+            <view>{{item.price}}</view>
+          </view>
+        </wux-media>
+      </view>
+    </wux-cell-group>
+    <wux-cell-group title="我要加盟">
+      <view class="pv-20 mb-20">
+        <wux-button block size="small" @tap="tapBattery" type="positive">我想加盟</wux-button>
+      </view>
+    </wux-cell-group>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tip from '@/utils/tip';
+import {
+  FILTER_LIST,
+  SYSTEM_INFO,
+  USER_SPECICAL_INFO,
+  USER_INFO
+} from '@/utils/constant';
+
+export default class shop extends wepy.page {
+  config = {
+    navigationBarTitleText: '营业点',
+    navigationBarBackgroundColor: '#33cd5f',
+    backgroundColor: '#33cd5f',
+    usingComponents: {
+      'wux-accordion-group': '../../wux/accordion-group/index',
+      'wux-accordion': '../../wux/accordion/index',
+      'wux-popup': '../../wux/popup/index',
+      'wux-button': '../../wux/button/index',
+      'wux-icon': '../../wux/icon/index',
+      'wux-badge': '../../wux/badge/index',
+      'wux-card': '../../wux/card/index',
+      'wux-filterbar': '../../wux/filterbar/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-search-bar': '../../wux/search-bar/index',
+      'wux-popover': '../../wux/popover/index',
+      'wux-media': '../../wux/media/index'
+    }
+  };
+  components = {};
+
+  data = {
+    shopId: 0,
+    carList: [
+      { name: '电动车1', price: '700/月', distanceText: '700m' },
+      { name: '电动车2', price: '800/月', distanceText: '800m' },
+      { name: '电动车3', price: '900/月', distanceText: '1.4km' }
+    ]
+  };
+
+  computed = {};
+
+  methods = {
+    tapBattery(e) {
+      wepy.navigateTo({ url: '/pages/battery/batteryInfo' });
+    },
+    tapLeague(e) {
+      wepy.switchTab({ url: '/pages/league/index' });
+    }
+  };
+
+  events = {};
+
+  onLoad(option) {
+    console.log(option.id);
+    this.shopId = option.id;
+    this.$apply();
+    wepy.setNavigationBarTitle({ title: `${option.id}号营业点` });
+  }
+}
+</script>
+
+<style>
+</style>

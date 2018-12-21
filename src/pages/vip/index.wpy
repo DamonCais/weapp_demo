@@ -31,7 +31,7 @@
           <text>1</text>
           <text>会员卡</text>
         </view>
-        <view class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+        <view @tap="tapPacket" class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
           <text>2</text>
           <text>红包</text>
         </view>
@@ -126,6 +126,10 @@ export default class vip extends wepy.page {
   };
 
   methods = {
+    tapPacket(){
+      wepy.navigateTo({ url: '/pages/vip/packet' });
+      
+    },
     tapCards(){
       wepy.navigateTo({ url: '/pages/vip/cards' });
     },

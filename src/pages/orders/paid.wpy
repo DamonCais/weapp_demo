@@ -1,0 +1,128 @@
+<template>
+  <view class="p-20">
+    <wux-cell title="份数" hover-class="none">
+      <wux-input-number
+        controlled
+        value="{{value}}"
+        color="assertive"
+        shape="circle"
+        slot="footer"
+        @change="onChange"
+      />
+    </wux-cell>
+    <view class="flex bg-white">
+      <view @tap="tapBtn" data-val="2" class="flex-grow p-20">
+        <myBtn shape="circle">2份</myBtn>
+      </view>
+      <view @tap="tapBtn" data-val="4" class="flex-grow p-20">
+        <myBtn shape="circle">4份</myBtn>
+      </view>
+      <view @tap="tapBtn" data-val="6" class="flex-grow p-20">
+        <myBtn shape="circle">6份</myBtn>
+      </view>
+      <view @tap="tapBtn" data-val="8" class="flex-grow p-20">
+        <myBtn shape="circle">8份</myBtn>
+      </view>
+    </view>
+    <wux-cell title="优惠券" is-link extra="选择优惠券" hover-class="none"></wux-cell>
+    <view class="p-20">支付方式
+      <text class="c999 fs-24">(可以选择任意支付方式)</text>
+    </view>
+    <!-- <i-cell-group>
+      <i-cell>
+        <view class="c333">余额0.10元(不足支付)</view>
+        <image style="width:30px;height:30px;" src="../../images/yue_pay.png" slot="icon">
+        <view slot="footer">
+          <myBtn2 shape="square" type="warning" size="small">充值</myBtn2>
+        </view>
+      </i-cell>
+    </i-cell-group>
+    <i-checkbox position="right" color="success" value="微信支付" checked="{{true}}">
+      <image style="width:30px;height:30px;" src="../../images/yue_pay.png" slot="icon">
+    </i-checkbox>
+    <i-checkbox position="right" color="success" value="支付宝支付" disabled></i-checkbox>-->
+    <wux-cell-group>
+      <wux-cell thumb="../../images/yue_pay.png" title="余额0.10元(不足支付)">
+        <view slot="footer">
+          <myBtn2 shape="square" type="warning" size="small">充值</myBtn2>
+        </view>
+      </wux-cell>
+      <wux-cell thumb="../../images/wechatpay.png" title="微信支付">
+        <view slot="footer">
+          <wux-selectable wux-class="checkbox" defaultChecked/>
+        </view>
+      </wux-cell>
+      <wux-cell thumb="../../images/alipay.png" title="支付宝支付">
+        <view slot="footer">
+          <wux-selectable disabled wux-class="checkbox" defaultChecked/>
+        </view>
+      </wux-cell>
+    </wux-cell-group>
+    <view class="ph-20">.购买后可在365天内赠送给任意好友</view>
+    <view class="ph-20">.你将购买的商品为。。。</view>
+    <view class="footer pv-20 align-center justify-space-between flex bg-white">
+      <view class="c333 flex-grow">应付：￥79.00</view>
+      <view class="p-20 flex-grow">
+        <myBtn3 type="warning" shape="circle">确认支付</myBtn3>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import myBtn from '@/components/button';
+export default class paid extends wepy.page {
+  config = {
+    navigationBarTitleText: '支付',
+    usingComponents: {
+      'wux-selectable': '../../wux/selectable/index',
+
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-input-number': '../../wux/input-number/index',
+      'i-button': '../../iview/button/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index',
+      'i-checkbox-group': '../../iview/checkbox-group/index',
+      'i-checkbox': '../../iview/checkbox/index'
+    }
+  };
+  components = {
+    myBtn: myBtn,
+    myBtn2: myBtn,
+    myBtn3: myBtn
+  };
+
+  data = {
+    value: 1,
+    current: 'wechat'
+  };
+
+  computed = {};
+
+  methods = {
+    tapBtn(e) {
+      let { val } = e.currentTarget.dataset;
+      this.value = val;
+    },
+    onChange(e) {
+      this.value = e.detail.value;
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+</style>

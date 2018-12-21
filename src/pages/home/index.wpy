@@ -1,5 +1,5 @@
 <template>
-  <view class="pv-20 bg-white">
+  <view class="pv-20">
     <!-- 顶部搜索 -->
     <view class="flex align-center mb-20">
       <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
@@ -41,25 +41,34 @@
     <!-- 定位 -->
     <view class="flex justify-space-between align-center ph-20 ">
       <view @tap="tapLocation" class="flex align-center" style="flex-grow:1;">
-        <wux-icon type="ios-pin"/>
-        <text class="wux-ellipsis pl-20" style="width:300rpx">{{location.address||'发现'}}</text>
+        <wux-icon size="24" type="ios-pin"/>
+        <text class="wux-ellipsis pl-20" style="width:300rpx">附近营业网点</text>
       </view>
-      <view @tap="tapSort">排序</view>
       <!-- <wux-filterbar items="{{ items }}" @change="filterChange"/> -->
     </view>
-    <wux-media
-      @tap="tapShop"
-      wx:for="{{shopList}}"
-      data-id="{{item.id}}"
-      thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
-      thumb-style="border-radius: 50%"
-    >
-      <view class="flex justify-space-between pv-20">
-        <text class="wux-ellipsis">{{item.name}}</text>
-        <text class="wux-ellipsis">{{item.distanceText}}</text>
+    <block wx:for="{{shopList}}" wx:key="">
+      <view class="p-10 bg-white radio-10 mb-20">
+        <jvc-media
+          @tap="tapShop"
+          data-id="{{item.id}}"
+          thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+          thumb-style="border-radius: 30rpx"
+          title="{{item.name}}"
+          label="{{item.label}}"
+          address="{{item.address}}"
+          distance="{{item.distanceText}}"
+        >
+        <view  class="flex justify-space-between lh-60 border-top media-btn">
+          <view class="wux-balanced">换电(6)</view>
+          <view class="cddd">租车(无)</view>
+          <view class="cddd">加盟(无)</view>
+          <view class="cddd">购物(无)</view>
+        </view>
+        </jvc-media>
       </view>
-    </wux-media>
-    <wux-button wx:if="{{hasMore}}" block size="small" @tap="tapLoadMore" type="positive">加载更多</wux-button>
+    </block>
+
+    <!-- <wux-button wx:if="{{hasMore}}" block size="small" @tap="tapLoadMore" type="positive">加载更多</wux-button> -->
     <i-load-more loading="{{ loading }}" />
 
     <wux-popup
@@ -96,7 +105,7 @@ export default class home extends wepy.page {
       'wux-cell': '../../wux/cell/index',
       'wux-search-bar': '../../wux/search-bar/index',
       'wux-popover': '../../wux/popover/index',
-      'wux-media': '../../wux/media/index',
+      'jvc-media': '../../wux/jvc_media/index',
             'wux-select': '../../wux/select/index',
                 "i-load-more": "../../iview/load-more/index"
 
@@ -124,27 +133,26 @@ export default class home extends wepy.page {
     shopList: [],
     shopList0: [
       {
-        name: '48V充电柜   沃尔玛停车场',
+        name: '1号营业点',
+        label:'48V充电柜',
+        address:'沃尔玛停车场',
         id: 1,
         distanceText: '700m'
       },
       {
-        name: '48V充电柜   沃尔玛停车场',
+        name: '2号营业点',
+        label:'48V充电柜',
+        address:'沃尔玛停车场',
         id: 2,
         distanceText: '800m'
-      }
-    ],
-    shopList1: [
-      {
-        name: '48V充电柜   沃尔玛停车场',
-        id: 5,
-        distanceText: '800m'
       },
-      {
-        name: '48V充电柜   沃尔玛停车场',
-        id: 6,
-        distanceText: '1.4km'
-      }
+            {
+        name: '3号营业点',
+        label:'48V充电柜',
+        address:'沃尔玛停车场',
+        id: 3,
+        distanceText: '900m'
+      },
     ],
     location: {},
     items: [
@@ -178,17 +186,19 @@ export default class home extends wepy.page {
       this.$apply();
     },
     async tapLocation(e) {
-      try {
-        if (!this.authSetting['scope.userLocation']) {
-          this.locationPop = true;
-          this.$apply();
-          return;
-        }
-        let res = await wepy.chooseLocation();
-        console.log(res);
-        this.location = res;
-        this.$apply();
-      } catch (error) {}
+wepy.switchTab({ url: '/pages/shops/index' });
+      
+      // try {
+      //   if (!this.authSetting['scope.userLocation']) {
+      //     this.locationPop = true;
+      //     this.$apply();
+      //     return;
+      //   }
+      //   let res = await wepy.chooseLocation();
+      //   console.log(res);
+      //   this.location = res;
+      //   this.$apply();
+      // } catch (error) {}
     },
     filterChange(e) {
       const { checkedItems, items } = e.detail;
@@ -212,7 +222,7 @@ export default class home extends wepy.page {
       console.log(e);
     },
     tapSearchBar(e) {
-      wepy.navigateTo({ url: '/pages/search' });
+      wepy.navigateTo({ url: '/pages/shops/index' });
     },
     tapMessage(e) {
       console.log(e.currentTarget.dataset.id);
@@ -230,7 +240,7 @@ export default class home extends wepy.page {
       }
     },
     tapLoadMore() {
-      this.shopList = [...this.shopList0, ...this.shopList1].sort(
+      this.shopList = [...this.shopList0, ...this.shopList0].sort(
         (a, b) => a.distance - b.distance
       );
       this.hasMore = false;
@@ -272,30 +282,42 @@ export default class home extends wepy.page {
   }
   onReachBottom(){
     this.loading = true;
-          this.$apply();
-
+    this.$apply();
+      this.shopList = [...this.shopList, ...this.shopList0].sort(
+        (a, b) => a.distance - b.distance
+      );
     setTimeout(() => {
       this.loading = false;
       this.$apply();
     }, 2000);
 }
-  tapSort(e) {
-    let that = this;
+//   tapSort(e) {
+//     let that = this;
     
-$wuxSelect('#wux-select1').open({
-      value: that.sort,
-      options: ['距离', '...'],
-      onConfirm: (value, index, options) => {
-        console.log('onConfirm', value, index, options);
-        if (index !== -1) {
-          that.sort = options[index];
-          that.$apply();
-        }
-      }
-    });
-  }
+// $wuxSelect('#wux-select1').open({
+//       value: that.sort,
+//       options: ['距离', '...'],
+//       onConfirm: (value, index, options) => {
+//         console.log('onConfirm', value, index, options);
+//         if (index !== -1) {
+//           that.sort = options[index];
+//           that.$apply();
+//         }
+//       }
+//     });
+//   }
 }
 </script>
 
-<style>
+<style lang="less">
+.media-btn{
+  padding-top:10rpx;
+  text-align: center;
+  view{
+    flex-grow:1;
+  }
+  view+view{
+    border-left: 1px solid #ddd;
+  }
+}
 </style>

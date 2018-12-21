@@ -41,34 +41,22 @@
       ></mySwiper>
     </view>
     <view class="mt-20">
-      <i-tabs scroll current="{{ currentIndex }}" @change="onTabsChange">
-        <i-tab wx:for="{{swiperList}}" key="{{index}}" >
-          <view class="ph-20 flex column align-center justify-center "
-          style="zoom:{{currentIndex==index?'1.3':'1'}};"
+      <myTabs :currentIndex.sync="currentIndex" :swiperList.sync="swiperList"/>
+      <!-- <i-tabs scroll toView="{{toView}}" current="{{ currentIndex }}" @change="onTabsChange">
+        <i-tab tabId="tab{{index}}" wx:for="{{swiperList}}" key="{{index}}">
+          <view
+            
+            class="ph-20 flex column align-center justify-center"
+            style="zoom:{{currentIndex==index?'1.3':'1'}};"
           >
             <image
               src="{{item.img}}"
-              
               style="border-radius: 20rpx;width: 20px; height: 20px; margin-right: 5px;"
             >
             <text clss="fs-24">{{item.title}}</text>
           </view>
         </i-tab>
-      </i-tabs>
-      <!-- <jvc-tabs  controlled current="{{ currentIndex }}" @change="onTabsChange">
-        <jvc-tab wx:for="{{swiperList}}" key="{{index}}">
-          <view class="p-20 flex column align-center justify-center "
-          style="zoom:{{currentIndex==index?'1.3':'1'}};"
-          >
-            <image
-              src="{{item.img}}"
-              
-              style="border-radius: 20rpx;width: 20px; height: 20px; margin-right: 5px;"
-            >
-            <text>{{item.title}}</text>
-          </view>
-        </jvc-tab>
-      </jvc-tabs>-->
+      </i-tabs>-->
     </view>
     <view class="p-20">当前会员有效期：20天</view>
     <view class="footer pv-20 bg-white border-box">
@@ -80,6 +68,7 @@
 <script>
 import wepy from 'wepy';
 import mySwiper from '@/components/swiper';
+import myTabs from '@/components/tabs';
 export default class cards extends wepy.page {
   config = {
     navigationBarTitleText: '会员卡',
@@ -93,7 +82,8 @@ export default class cards extends wepy.page {
     }
   };
   components = {
-    mySwiper: mySwiper
+    mySwiper: mySwiper,
+    myTabs: myTabs
   };
 
   data = {
@@ -141,11 +131,15 @@ export default class cards extends wepy.page {
     ]
   };
 
-  computed = {};
+  computed = {
+    toView() {
+      return 'tab' + this.currentIndex;
+    }
+  };
 
   methods = {
     tapPaid(e) {
-      // wepy.navigateTo({ url: '/pages/vip/recharge' });
+      wepy.navigateTo({ url: '/pages/orders/paid' });
     },
     swiperChange(e) {
       console.log(e);

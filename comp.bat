@@ -21,6 +21,7 @@ xcopy /y  D:\project\wux1\wux\search-bar D:\project\wux1\src\wux\search-bar
 xcopy /y  D:\project\wux1\wux\popover D:\project\wux1\src\wux\popover 
 xcopy /y  D:\project\wux1\wux\tabs D:\project\wux1\src\wux\tabs 
 xcopy /y  D:\project\wux1\wux\tab D:\project\wux1\src\wux\tab 
+xcopy /y  D:\project\wux1\wux\input-number D:\project\wux1\src\wux\input-number 
 xcopy /y  D:\project\wux1\wux\radio D:\project\wux1\src\wux\radio 
 xcopy /y  D:\project\wux1\wux\radio-group D:\project\wux1\src\wux\radio-group 
 xcopy /y  D:\project\wux1\wux\checkbox D:\project\wux1\src\wux\checkbox 

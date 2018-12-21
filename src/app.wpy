@@ -20,28 +20,33 @@ setStore(store);
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/authorize',
+
+      'pages/home/index',
+
+      'pages/shops/index',
+      'pages/shops/map',
+
+      'pages/shops/shop',
+
+      'pages/orders/paid',
+      'pages/orders/index',
+
       'pages/vip/cards',
 
       'pages/vip/packet',
-
-      'pages/authorize',
 
       'pages/vip/index',
 
       'pages/vip/wallet',
       'pages/vip/recharge',
 
-      'pages/home/index',
-
       'pages/league/index',
       'pages/orders/order',
-      'pages/orders/index',
 
       'pages/battery/exchange',
       'pages/battery/batteryInfo',
 
-      'pages/shops/index',
-      'pages/shops/shop',
       'pages/vip/info',
       'pages/search',
       'pages/messages/index'

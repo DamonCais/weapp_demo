@@ -46,6 +46,9 @@ export default class base extends wepy.page {
     tapBtn(e) {
       this.currentIndex = e.currentTarget.dataset.index;
       console.log(e);
+    },
+    tapPaid() {
+      wepy.navigateTo({ url: '/pages/orders/paid' });
     }
   };
 

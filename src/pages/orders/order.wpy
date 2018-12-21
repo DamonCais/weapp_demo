@@ -6,7 +6,7 @@
     </wux-card>
     <view class="order-footer flex">
       <view class="flex-grow p-20 text-center bg-white lh-60 order-btn">放弃订单</view>
-      <view class="flex-grow p-20 text-center wux-balanced--bg lh-60 order-btn">去支付</view>
+      <view @tap="tapPaid" class="flex-grow p-20 text-center wux-balanced--bg lh-60 order-btn">去支付</view>
     </view>
   </view>
 </template>
@@ -28,7 +28,11 @@ export default class order extends wepy.page {
 
   computed = {};
 
-  methods = {};
+  methods = {
+    tapPaid() {
+      wepy.navigateTo({ url: '/pages/orders/paid' });
+    }
+  };
 
   events = {};
 

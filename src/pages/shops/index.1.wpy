@@ -1,38 +1,57 @@
 <template>
   <view>
-    <view style="margin-top:84rpx;">
-      <wux-cell title="附近营业点" @tap="tapLocation" extra="地图"></wux-cell>
-      <view class="p-20">
-        <block wx:for="{{shopList}}" wx:key>
-          <view class="p-10 bg-white radio-10 mb-20">
-            <jvc-media
-              @tap="tapShop"
-              data-id="{{item.id}}"
-              thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
-              thumb-style="border-radius: 30rpx"
-              title="{{item.name}}"
-              label="{{item.label}}"
-              address="{{item.address}}"
-              distance="{{item.distanceText}}"
-            >
-              <view class="flex justify-space-between lh-60 border-top media-btns">
-                <view class="wux-balanced">换电(6)</view>
-                <view class="cddd">租车(无)</view>
-                <view class="cddd">加盟(无)</view>
-                <view class="cddd">购物(无)</view>
-              </view>
-            </jvc-media>
-          </view>
-        </block>
+    <!-- 定位 -->
+    <!-- <view class="flex justify-space-between mb-20 bg-white p-20">
+      <view @tap="tapLocation" class="flex align-center" style="flex-grow:1;">
+        <wux-icon class="mr-20" type="ios-pin"/>
+        <text class="wux-ellipsis" style="width:300rpx">{{location.address||'第一营业点'}}</text>
       </view>
-    </view>
-    <view class="flex align-center bg-white border-box pl-20 header">
+      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
+    </view>-->
+
+    <view class="flex align-center bg-white pl-20">
       <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
       <view class="pl-20" style="flex-grow:1;">
         <wux-search-bar @tap="tapSearchBar" clear=""/>
+        <!-- <wux-button size="small" @tap="tapSearchBar" block outline type="light">
+          <wux-icon type="ios-search" size="16"/>Search
+        </wux-button>-->
       </view>
-      <!-- <wux-icon @tap="tapLocation" type="ios-pin"/> -->
     </view>
+    <wux-cell title="附近营业点" @tap="tapFilter" extra="地图"></wux-cell>
+    <view class="p-20">
+      <block wx:for="{{shopList}}" wx:key>
+        <view class="p-10 bg-white radio-10 mb-20">
+          <jvc-media
+            @tap="tapShop"
+            data-id="{{item.id}}"
+            thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+            thumb-style="border-radius: 30rpx"
+            title="{{item.name}}"
+            label="{{item.label}}"
+            address="{{item.address}}"
+            distance="{{item.distanceText}}"
+          >
+            <view class="flex justify-space-between lh-60 border-top media-btn">
+              <view class="wux-balanced">换电(6)</view>
+              <view class="cddd">租车(无)</view>
+              <view class="cddd">加盟(无)</view>
+              <view class="cddd">购物(无)</view>
+            </view>
+          </jvc-media>
+        </view>
+      </block>
+    </view>
+    <wux-popup
+      closable
+      visible="{{ locationPop }}"
+      title="定位"
+      content="请求获取定位权限"
+      @close="onCloseLocationPop"
+    >
+      <wux-button openType="openSetting" @opensetting="onOpenSetting" block type="balanced">确认</wux-button>
+    </wux-popup>
+    <wux-actionsheet id="wux-actionsheet"/>
   </view>
 </template>
 
@@ -70,32 +89,17 @@ export default class shops extends wepy.page {
   components = {};
 
   data = {
-    shopVisible: false,
-    showMap: false,
-    markers: [
-      {
-        iconPath: '/images/icon_my_04.png',
-        id: 0,
-        latitude: 23.099994,
-        longitude: 113.32452,
-        width: 25,
-        height: 25
-      }
-    ],
     showshopList: false,
     hasMore: true,
     authSetting: {},
     locationPop: false,
+    swiperList: [
+      { img: 'https://j-image.missfresh.cn/img_20181114145542681.jpg' },
+      { img: 'https://j-image.missfresh.cn/img_20181114145542681.jpg' }
+    ],
     filterType: 4,
     filterText: ['换电', '租车', '加盟', '全部'],
     shopList: [],
-    shop: {
-      name: '1号营业点',
-      label: '48V充电柜',
-      address: '沃尔玛停车场',
-      id: 1,
-      distanceText: '700m'
-    },
     shopList0: [
       {
         name: '1号营业点',
@@ -117,13 +121,6 @@ export default class shops extends wepy.page {
         address: '沃尔玛停车场',
         id: 3,
         distanceText: '900m'
-      },
-      {
-        name: '4号营业点',
-        label: '48V充电柜',
-        address: '沃尔玛停车场',
-        id: 4,
-        distanceText: '900m'
       }
     ],
     location: {},
@@ -133,19 +130,15 @@ export default class shops extends wepy.page {
   computed = {};
 
   methods = {
-    tapLocation() {
-      wepy.navigateTo({ url: '/pages/shops/map' });
-    },
-    regionchange(e) {
-      console.log(e.type);
-    },
-    markertap(e) {
-      console.log(e.markerId);
-      this.shopVisible = true;
-    },
-    controltap(e) {
-      console.log(e.controlId);
-    },
+    // async tapFilter() {
+    //   try {
+    //     let res = await wepy.showActionSheet({
+    //       itemList: ['我要换电', '我要租车', '我要加盟'] //按钮的文字数组，数组长度最大为6个,
+    //     });
+    //     this.filterType = res.tapIndex;
+    //     this.$apply();
+    //   } catch (error) {}
+    // },
     tapSearchBar(e) {
       // wepy.navigateTo({ url: '/pages/search' });
     },
@@ -192,7 +185,7 @@ export default class shops extends wepy.page {
 </script>
 
 <style lang="less">
-.media-btns {
+.media-btn {
   padding-top: 10rpx;
   text-align: center;
   view {
@@ -201,11 +194,5 @@ export default class shops extends wepy.page {
   view + view {
     border-left: 1px solid #ddd;
   }
-}
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
 }
 </style>

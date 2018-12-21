@@ -23,6 +23,10 @@ Component({
         count: {
             type: Number,
             value: 0
+        },
+        tabId: {
+            type: String,
+            value: '',
         }
     },
 
@@ -33,16 +37,16 @@ Component({
     },
 
     methods: {
-        changeCurrent (current) {
+        changeCurrent(current) {
             this.setData({ current });
         },
-        changeCurrentColor (currentColor) {
+        changeCurrentColor(currentColor) {
             this.setData({ currentColor });
         },
-        changeScroll (scroll) {
+        changeScroll(scroll) {
             this.setData({ scroll });
         },
-        handleClickItem () {
+        handleClickItem() {
             const parent = this.getRelationNodes('../tabs/index')[0];
             parent.emitEvent(this.data.key);
         }

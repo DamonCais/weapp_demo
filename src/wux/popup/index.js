@@ -16,10 +16,6 @@ Component({
             type: String,
             value: '',
         },
-        contentStyle: {
-            type: String,
-            value: '',
-        },
         extra: {
             type: String,
             value: '',

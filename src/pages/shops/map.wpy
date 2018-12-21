@@ -1,37 +1,44 @@
 <template>
   <view>
-    <view style="margin-top:84rpx;">
-      <wux-cell title="附近营业点" @tap="tapLocation" extra="地图"></wux-cell>
-      <view class="p-20">
-        <block wx:for="{{shopList}}" wx:key>
-          <view class="p-10 bg-white radio-10 mb-20">
-            <jvc-media
-              @tap="tapShop"
-              data-id="{{item.id}}"
-              thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
-              thumb-style="border-radius: 30rpx"
-              title="{{item.name}}"
-              label="{{item.label}}"
-              address="{{item.address}}"
-              distance="{{item.distanceText}}"
+    <view>
+      <map
+        id="map"
+        longitude="119.58325688"
+        latitude="26.719876"
+        scale="14"
+        controls="{{controls}}"
+        bindcontroltap="controltap"
+        markers="{{markers}}"
+        bindmarkertap="markertap"
+        bindregionchange="regionchange"
+        show-location
+        style="width: 100%; height:1334rpx;"
+      >
+        <cover-view wx:if="{{shopVisible}}" class="footer p-20">
+          <cover-view data-id="1" @tap="tapShop" class="bg-white radio-20 flex column p-20">
+            <cover-view class="flex">
+              <cover-image
+                style="width:150rpx;height:150rpx;"
+                src="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+              ></cover-image>
+              <cover-view class="flex-grow flex column p-20 justify-space-between">
+                <cover-view>1号营业点</cover-view>
+                <cover-view>48V充电柜</cover-view>
+                <cover-view>沃尔玛停车场</cover-view>
+              </cover-view>
+            </cover-view>
+            <cover-view
+              style="border-top:1px solid #999;"
+              class="flex justify-space-between lh-60 pt-20 text-center"
             >
-              <view class="flex justify-space-between lh-60 border-top media-btns">
-                <view class="wux-balanced">换电(6)</view>
-                <view class="cddd">租车(无)</view>
-                <view class="cddd">加盟(无)</view>
-                <view class="cddd">购物(无)</view>
-              </view>
-            </jvc-media>
-          </view>
-        </block>
-      </view>
-    </view>
-    <view class="flex align-center bg-white border-box pl-20 header">
-      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
-      <view class="pl-20" style="flex-grow:1;">
-        <wux-search-bar @tap="tapSearchBar" clear=""/>
-      </view>
-      <!-- <wux-icon @tap="tapLocation" type="ios-pin"/> -->
+              <cover-view style="border-right:1px solid #999;" class="wux-balanced flex-grow">换电(6)</cover-view>
+              <cover-view style="border-right:1px solid #999;" class="cddd flex-grow">租车(无)</cover-view>
+              <cover-view style="border-right:1px solid #999;" class="cddd flex-grow">加盟(无)</cover-view>
+              <cover-view class="cddd flex-grow">购物(无)</cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+      </map>
     </view>
   </view>
 </template>
@@ -76,8 +83,16 @@ export default class shops extends wepy.page {
       {
         iconPath: '/images/icon_my_04.png',
         id: 0,
-        latitude: 23.099994,
-        longitude: 113.32452,
+        latitude: 26.71987628,
+        longitude: 119.58325688,
+        width: 25,
+        height: 25
+      },
+      {
+        iconPath: '/images/icon_my_04.png',
+        id: 1,
+        latitude: 26.72150039,
+        longitude: 119.58142089,
         width: 25,
         height: 25
       }
@@ -134,7 +149,7 @@ export default class shops extends wepy.page {
 
   methods = {
     tapLocation() {
-      wepy.navigateTo({ url: '/pages/shops/map' });
+      this.showMap = !this.showMap;
     },
     regionchange(e) {
       console.log(e.type);
@@ -192,15 +207,21 @@ export default class shops extends wepy.page {
 </script>
 
 <style lang="less">
-.media-btns {
-  padding-top: 10rpx;
-  text-align: center;
-  view {
-    flex-grow: 1;
-  }
-  view + view {
-    border-left: 1px solid #ddd;
-  }
+// .s {
+//   padding-top: 10rpx;
+//   text-align: center;
+//   . {
+//     flex-grow: 1;
+//   }
+//   . + . {
+//     border-left: 1px solid #ddd;
+//   }
+// }
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .header {
   position: fixed;

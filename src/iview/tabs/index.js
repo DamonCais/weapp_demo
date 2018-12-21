@@ -34,12 +34,10 @@ Component({
             type: Boolean,
             value: false
         },
-        toView: {
-            type: String,
-            value: '',
-        }
     },
-
+    data: {
+        toView: 'tab0',
+    },
     methods: {
         changeCurrent(val = this.data.current) {
             let items = this.getRelationNodes('../tab/index');
@@ -52,6 +50,9 @@ Component({
                     item.changeCurrentColor(this.data.color);
                 });
             }
+            this.setData({
+                toView: `tab${val}`
+            })
         },
         emitEvent(key) {
             this.triggerEvent('change', { key });

@@ -4,7 +4,7 @@ var fs = require('fs');
 
 
 let pagePath = path.join(__dirname, './src/pages');
-var files = glob.sync(`${pagePath}/*.wpy`);
+var files = glob.sync(`${pagePath}/**/*.wpy`);
 let compsObj = {
 
 };
