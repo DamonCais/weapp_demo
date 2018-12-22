@@ -2,14 +2,14 @@
   <view>
     <wux-select id="wux-select1"/>
     <view class="wux-energized--bg p-20 mb-20">
-      <wux-media thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
+      <jvc-media-b thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
         <view class="flex column justify-space-around pv-20">
           <view class="c333">{{userInfo.nickName}}</view>
           <view class="c999">{{baseForm.phone.value}}</view>
         </view>
-      </wux-media>
+      </jvc-media-b>
     </view>
-    <view style="margin-bottom:200rpx;">
+    <view style="padding-bottom:200rpx;">
       <!-- <wux-cell-group title="基本信息"> -->
       <i-panel title="基本信息">
         <editList1 wx:if="{{isEdit}}" :form.sync="baseForm"/>
@@ -37,17 +37,38 @@
     <!-- </wux-cell-group> -->
     <view class="info-footer">
       <view wx:if="{{isEdit}}" class="p-20 flex justify-space-between text-center">
-        <view class="flex-grow pv-20">
+        <!-- <view class="flex-grow pv-20">
           <button @tap="triggleIsEdit" class="radio-20 wux-assertive--bg button">取消</button>
         </view>
         <view class="flex-grow pv-20">
           <button @tap="triggleIsEdit" class="radio-20 wux-positive--bg button">更新</button>
-        </view>
+        </view>-->
+        <jvc-button
+          @tap="triggleIsEdit"
+          class="flex-grow pv-20"
+          shape="circle"
+          loading="{{false}}"
+          @click="onClick"
+          type="error"
+        >取消</jvc-button>
+        <jvc-button
+          @tap="triggleIsEdit"
+          class="flex-grow pv-20"
+          shape="circle"
+          loading="{{false}}"
+          @click="onClick"
+          type="warning"
+        >更新</jvc-button>
       </view>
       <view wx:if="{{!isEdit}}" class="p-20 flex justify-space-between text-center">
-        <view @tap="triggleIsEdit" class="flex-grow pv-20">
-          <button class="radio-20 wux-balanced--bg button">编辑</button>
-        </view>
+        <jvc-button
+          @tap="triggleIsEdit"
+          class="flex-grow pv-20"
+          shape="circle"
+          loading="{{false}}"
+          @click="onClick"
+          type="success"
+        >编辑</jvc-button>
       </view>
     </view>
   </view>
@@ -73,6 +94,10 @@ export default class vip extends wepy.page {
     navigationBarBackgroundColor: '#ffc900',
     backgroundColor: '#ffc900',
     usingComponents: {
+      'jvc-button': '../../iview/jvc_button/index',
+
+      'jvc-media-b': '../../wux/jvc_media_b/index',
+
       'wux-accordion-group': '../../wux/accordion-group/index',
       'wux-accordion': '../../wux/accordion/index',
       'wux-icon': '../../wux/icon/index',

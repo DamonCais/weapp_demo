@@ -1,0 +1,114 @@
+<template>
+  <view class="pv-20 bg-white" style="height:100%;">
+    <view class="flex column justify-space-around align-center p-20 bg-gray radio-10 box-shadow">
+      <text class="fs-36 mb-20 wux-calm">可用积分</text>
+      <text class="fs-48 wux-positive">9876</text>
+      <text class="fs-36 wux-energized">你有xxx积分要过期了</text>
+    </view>
+    <view class="ph-20 fs-36 fw-700">已获取
+      <text class="c999">(本月)</text>
+    </view>
+    <view class="p-40 bd radio-10 box-shadow flex">
+      <view class="flex-grow flex align-center justify-center mb-40">
+        <jvc-circle size="80" percents="{{percents}}" percent="100" color="#33cd5f"></jvc-circle>
+      </view>
+      <view class="flex-grow flex column justify-space-between pv-20">
+        <view class="c333">
+          <wux-badge status="warning" class="pr-20"/>消费购物407
+        </view>
+        <view class="c333">
+          <wux-badge status="success" class="pr-20"/>消费购物407
+        </view>
+        <view class="c333">
+          <wux-badge status="default" class="pr-20"/>消费购物407
+        </view>
+        <view class="c333">
+          <wux-badge status="error" class="pr-20"/>消费购物407
+        </view>
+        <view class="c000 border-top">总计：500</view>
+      </view>
+    </view>
+    <view class="ph-20 fs-36 fw-700 flex justify-space-between">
+      <text class="c000">积分记录</text>
+      <text class="c999">全部</text>
+    </view>
+    <view class="p-40 bd radio-10 box-shadow flex justify-space-between">
+      <text style="border-left:3px solid #80C2E2;" class="pl-20">本月</text>
+      <text>获取：510</text>
+    </view>
+    <view class="p-40 bd radio-10 box-shadow flex justify-space-between">
+      <text class="pl-20">蚂蚁花呗</text>
+      <text>510</text>
+    </view>
+    <view class="footer p-20">
+      <jvc-button class="flex-grow" shape="circle" @click="onClick" type="primary">签到领积分</jvc-button>
+    </view>
+  </view>
+</template>
+
+<script>
+// button,icon,input,cell
+import wepy from 'wepy';
+export default class bonus extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的积分',
+    usingComponents: {
+      'jvc-button': '../../../iview/jvc_button/index',
+      'jvc-icon': '../../../iview/jvc_icon/index',
+      'jvc-media': '../../../wux/jvc_media/index',
+      'jvc-media-b': '../../../wux/jvc_media_b/index',
+      'wux-tag': '../../../wux/tag/index',
+      'jvc-circle': '../../../wux/jvc_circle/index',
+      'wux-badge': '../../../wux/badge/index',
+
+      'i-input': '../../../iview/input/index',
+      'i-cell-group': '../../../iview/cell-group/index',
+      'i-cell': '../../../iview/cell/index',
+      'i-panel': '../../../iview/panel/index',
+      'i-load-more': '../../../iview/load-more/index'
+    }
+  };
+  components = {};
+
+  data = {
+    percents: [
+      { percent: 23, color: 'red' },
+      { percent: 44, color: 'orange' },
+      { percent: 50, color: 'blue' },
+      { percent: 88, color: 'yellow' },
+      { percent: 100, color: 'green' }
+    ],
+    item: {
+      name: '1号营业点',
+      label: '48V充电柜',
+      address: '沃尔玛停车场',
+      id: 1,
+      distanceText: '700m'
+    }
+  };
+
+  computed = {};
+
+  methods = {
+    onClick(e) {
+      console.log(e);
+    },
+    thumbTap(e) {
+      console.log(e);
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+</style>

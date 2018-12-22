@@ -63,7 +63,7 @@
     <view class="footer pv-20 align-center justify-space-between flex bg-white">
       <view class="c333 flex-grow">应付：￥79.00</view>
       <view class="p-20 flex-grow">
-        <myBtn3 type="warning" shape="circle">确认支付</myBtn3>
+        <myBtn3 type="my-pay" shape="circle">确认支付</myBtn3>
       </view>
     </view>
   </view>

@@ -23,25 +23,22 @@
       </view>
     </wux-cell-group>
     <wux-cell-group title="电池柜">
-      <view class="flex justify-flex-start border-box pv-20 wrap">
-        <view
+      <view class="flex justify-flex-start border-box p-20 wrap">
+        <jvc-button
           @tap="tapBattery"
           data-index="{{index}}"
           wx:for="{{status}}"
           class="box pv-20 flex align-center text-center border-box"
+          disabled="{{item<50}}"
+          outline
+          block
+          type="{{item>=50?'my-useable':'defult'}}"
         >
-          <wux-button
-            style="width:100%;"
-            disabled="{{!item}}"
-            outline
-            block
-            type="{{item?'balanced':'stable'}}"
-          >
-            <view class="flex column justify-center align-center ph-20 border-box lh-40">
-              <text class="fs-36">{{item?'可用':'不可用'}}</text>
-            </view>
-          </wux-button>
-        </view>
+          <view class="flex column justify-center align-center ph-20 border-box lh-40">
+            <text class="fs-24">电量:{{item}}%</text>
+            <text class="fs-36">{{item>50?'可用':'不可用'}}</text>
+          </view>
+        </jvc-button>
       </view>
     </wux-cell-group>
   </view>
@@ -74,14 +71,15 @@ export default class shop extends wepy.page {
       'wux-search-bar': '../../wux/search-bar/index',
       'wux-popover': '../../wux/popover/index',
       'wux-media': '../../wux/media/index',
-      'jvc-media': '../../wux/jvc_media/index'
+      'jvc-media': '../../wux/jvc_media/index',
+      'jvc-button': '../../iview/jvc_button/index'
     }
   };
   components = {};
 
   data = {
     shopId: 0,
-    status: [1, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+    status: [80, 0, 10, 15, 20, 60, 75, 90, 100, 64],
     location: {},
 
     carList: [
@@ -159,6 +157,7 @@ export default class shop extends wepy.page {
 <style lang="less">
 .box {
   flex-basis: 50%;
+  padding: 10rpx 20rpx;
   // border: 1px solid #999;
 }
 .shop-header {

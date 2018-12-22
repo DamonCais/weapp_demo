@@ -1,23 +1,44 @@
 <template>
-  <view>
-    <wux-cell extra="abc123" is-link @tap="tapScan" title="我的电池码"></wux-cell>
+  <view class="battery-info">
     <view class="p-20">
       <wux-card title="换电须知">
-        <view slot="body">请确保电池完好无损，如果电池发生膨胀等异常状况，请与工作人员联系</view>
-        <view slot="footer">特别提醒：请选择相同规格的电池</view>
+        <view slot="body">
+          <view>.为了您和他人的安全，请确保所归还电池无明显损坏，无安全隐患</view>
+          <view>.如电池存在隐患问题，请及时联系客服：xxxxxxxx</view>
+          <view>.归还时确保电池及时充电，以便他人使用</view>
+          <view class="wux-assertive">.特别提示：请保证您所换电池型号与本智能充电柜所提供电池匹配</view>
+        </view>
+        <view style="border-top:1px solid #000;width:100%;" class="p-20" slot="footer">
+          <checkbox-group bindchange="checkboxChange">
+            <label style="zoom:1;display:inline-block" class="checkbox">
+              <checkbox value="checked" checked="{{isChecked}}"/>我已阅读并同意《换点须知》
+            </label>
+          </checkbox-group>
+        </view>
       </wux-card>
     </view>
-    <wux-cell-group title="电池问卷">
+    <!-- <wux-cell-group title="电池问卷">
       <editList1 :form.sync="baseForm"/>
+    </wux-cell-group>-->
+    <wux-cell-group title="电池信息">
+      <wux-cell extra="abc123" is-link @tap="tapScan" title="我的电池码"></wux-cell>
+      <wux-cell extra="48V" title="电池大小"></wux-cell>
     </wux-cell-group>
     <wux-cell-group title="费用信息">
-      <wux-cell title="合计" extra="￥20"></wux-cell>
+      <wux-cell title="合计" extra="免费"></wux-cell>
     </wux-cell-group>
-    <view class="p-20">
-      <wux-button block size="small" data-id="{{id}}" @tap="tapPaid" type="positive">需要支付</wux-button>
+    <view class="p-20 border-20">
+      <image
+        style="width:100%;height:300rpx; "
+        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544763965330&di=a484102f33d3721555a4632fcb93ab70&imgtype=0&src=http%3A%2F%2Fpic90.huitu.com%2Fres%2F20161116%2F804858_20161116180047869020_1.jpg"
+      >
     </view>
-    <view class="p-20">
-      <wux-button block size="small" data-id="{{id}}" @tap="tapBattery" type="positive">马上换电</wux-button>
+    <!-- <view class="p-20">
+      <wux-button block size="small" data-id="{{id}}" @tap="tapPaid" type="positive">需要支付</wux-button>
+    </view>-->
+    <view @tap="tapBattery" class="footer bg-white p-20">
+      <myBtn  type="my-battery" shape="circle">马上换电</myBtn>
+      <!-- <wux-button block size="small" data-id="{{id}}" @tap="tapBattery" type="positive">马上换电</wux-button> -->
     </view>
   </view>
 </template>
@@ -25,6 +46,7 @@
 <script>
 import wepy from 'wepy';
 import editList from '@/components/editList';
+import myBtn from '@/components/button';
 
 export default class base extends wepy.page {
   config = {
@@ -51,11 +73,13 @@ export default class base extends wepy.page {
     }
   };
   components = {
-    editList1: editList
+    editList1: editList,
+    myBtn: myBtn
   };
 
   data = {
     id: 'abc123',
+    isChecked: false,
     baseForm: {
       type: {
         label: '电池大小',
@@ -79,6 +103,11 @@ export default class base extends wepy.page {
   computed = {};
 
   methods = {
+    checkboxChange(e) {
+      let arr = e.detail.value;
+      this.isChecked = Boolean(arr.length);
+      this.$apply();
+    },
     tapPaid(e) {
       let { id } = e.currentTarget.dataset;
       wepy.navigateTo({ url: '/pages/orders/order?id=' + id });
@@ -105,5 +134,15 @@ export default class base extends wepy.page {
 }
 </script>
 
-<style>
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  // background: url('http://mp.jycais.cn/uploadDir/upload_c71ad9413bd779699413a1fc24434251.png')
+}
+.battery-info {
+  padding-bottom: 120rpx;
+}
 </style>

@@ -20,23 +20,30 @@ setStore(store);
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/authorize',
+      'pages/bonus/get',
+      'pages/vip/index',
+      'pages/vip/bonus',
+
+      'pages/shops/shop',
 
       'pages/home/index',
 
-      'pages/shops/index',
+      'pages/authorize',
+      'pages/base',
+
+      'pages/vip/card',
+      'pages/vip/cards',
+
+      'pages/battery/batteryInfo',
+
       'pages/shops/map',
 
-      'pages/shops/shop',
+      'pages/shops/index',
 
       'pages/orders/paid',
       'pages/orders/index',
 
-      'pages/vip/cards',
-
       'pages/vip/packet',
-
-      'pages/vip/index',
 
       'pages/vip/wallet',
       'pages/vip/recharge',
@@ -45,7 +52,6 @@ export default class extends wepy.app {
       'pages/orders/order',
 
       'pages/battery/exchange',
-      'pages/battery/batteryInfo',
 
       'pages/vip/info',
       'pages/search',
@@ -96,7 +102,7 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-    this.testAsync();
+    // this.testAsync();
   }
 
   sleep(s) {
@@ -108,8 +114,8 @@ export default class extends wepy.app {
   }
 
   async testAsync() {
-    const data = await this.sleep(3);
-    console.log(data);
+    // const data = await this.sleep(3);
+    // console.log(data);
   }
 
   getUserInfo(cb) {

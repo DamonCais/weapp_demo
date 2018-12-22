@@ -21,9 +21,10 @@
     <view class="">
       <view class="flex align-center justify-center mb-20">
         <image
-        class="radio-circle"
-        style="width:100rpx;height:100rpx; "
-         src="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg">
+          class="radio-circle"
+          style="width:100rpx;height:100rpx; "
+          src="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+        >
         <text class="pl-20">聚微超</text>
       </view>
       <swiper
@@ -42,9 +43,9 @@
       </swiper>
     </view>
     <view wx:if="{{!userInfo.nickName}}">
-      <view class="text-center">申请获取以下权限：</view>
-      <view class="text-center">获取你的公开信息（头像、昵称等）</view>
-      <wux-button open-type="getUserInfo" type="balanced" block bindgetuserinfo="onGotUserInfo">授权</wux-button>
+      <view class="p-20 text-center">申请获取以下权限：</view>
+      <view class="p-20 text-center">获取你的公开信息（头像、昵称等）</view>
+      <jvc-button open-type="getUserInfo" type="success" block bindgetuserinfo="onGotUserInfo">授权</jvc-button>
     </view>
     <view wx:if="{{userInfo.nickName}}">
       <wux-cell>
@@ -53,8 +54,8 @@
       <wux-cell>
         <wux-input controlled value="{{sms}}" label="验证码">
           <view slot="footer">
-            <wux-button size="small" @tap="tapSms" wx:if="{{!countSec}}" type="balanced">{{smsBtn}}</wux-button>
-            <wux-button size="small" wx:if="{{countSec}}" clear="" type="balanced">{{countSec}}</wux-button>
+            <jvc-button size="small" @tap="tapSms" wx:if="{{!countSec}}" type="success">{{smsBtn}}</jvc-button>
+            <jvc-button size="small" wx:if="{{countSec}}" clear="" type="success">{{countSec}}</jvc-button>
           </view>
         </wux-input>
       </wux-cell>
@@ -65,7 +66,8 @@
         <!-- <wux-selectable  controlled checked="{{isAgree}}"></wux-selectable> -->
         <text @tap="confirm" style="color:green;text-decoration:underline;line-height:23px;">服务协议</text>
       </view>
-      <wux-button loading="{{loading}}" @tap="tapBindPhone" block type="balanced">绑定手机</wux-button>
+      <!-- <wux-button  block type="balanced">绑定手机</wux-button> -->
+      <jvc-button loading="{{loading}}" @tap="tapBindPhone" type="success">绑定手机</jvc-button>
     </view>
   </view>
 </template>
@@ -86,7 +88,8 @@ export default class Authorize extends wepy.page {
       'wux-cell': '../wux/cell/index',
       'wux-input': '../wux/input/index',
       'wux-selectable': '../wux/selectable/index',
-      'wux-dialog': '../wux/dialog/index'
+      'wux-dialog': '../wux/dialog/index',
+      'jvc-button': '../iview/jvc_button/index'
     }
   };
   data = {

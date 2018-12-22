@@ -1,19 +1,12 @@
-<view class="jvc-media">
+<view>
     <view class="wux-class wux-media {{ align ? 'wux-media--align-' + align : '' }}">
-        <view bindtap="onTap" class="wux-media__hd">
+        <view bindtap="thumbTap" class="wux-media__hd">
             <image class="wux-media__thumb" src="{{ thumb }}" mode="aspectFit" style="{{ thumbStyle }}" wx:if="{{ thumb }}" />
         </view>
         <view class="wux-media__bd">
             <view class="wux-media__title" wx:if="{{ title }}">{{ title }}</view>
             <view class="wux-media__desc" wx:if="{{ label }}">{{ label }}</view>
-            <view class="wux-media__place">
-                <view>
-                    <wux-icon size="16" type="ios-pin" />
-                    {{ address }}
-                </view>
-                <view>{{distance}}</view>
-            </view>
+            <slot></slot>
         </view>
     </view>
-    <slot></slot>
 </view>

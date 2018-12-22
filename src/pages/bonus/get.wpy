@@ -1,0 +1,190 @@
+<template>
+  <view class="bg-white" style="height:100%;">
+    <!-- 签到按钮 -->
+    <view class="header">
+      <view class="tag">
+        <view>签到</view>
+        <view class="circle">+1</view>
+      </view>
+      <wux-circle animate="{{false}}" percent="100" color="#158DE5">点击领取</wux-circle>
+    </view>
+    <!-- 签到Step -->
+    <view class="step">
+      <view class="left flex column align-center">
+        <view>已连续签到</view>
+        <view>0天</view>
+      </view>
+      <view class="right flex align-center justify-space-between">
+        <view class="border"></view>
+        <view wx:for="{{days}}" class="flex column justify-space-between align-center">
+          <view class="fs-24">12.22</view>
+          <view class="circle {{index<4?'current':''}} fs-24">+{{index+1}}</view>
+        </view>
+      </view>
+    </view>
+    <!-- 做任务 -->
+    <view class="p-20 fw-700 flex">做任务赚积分</view>
+    <view class="pv-20">
+      <view class="p-20 bd radio-10 box-shadow flex align-center">
+        <image
+          style="width:80rpx;height:80rpx;border-radius:50%;"
+          src="http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg"
+        >
+        <view class="flex-grow flex justify-space-between align-center">
+          <view class="pl-20 flex column">
+            <text>体验定投赚积分</text>
+            <text class="c999">奖励985积分</text>
+          </view>
+          <view>
+            <jvc-button size="small" type="primary">领取任务</jvc-button>
+          </view>
+        </view>
+      </view>
+      <view class="p-20 bd radio-10 box-shadow flex align-center">
+        <image
+          style="width:80rpx;height:80rpx;border-radius:50%;"
+          src="http://mp.jycais.cn/uploadDir/upload_c7d9e05d3e3723353ee6afed758c4bc1.jpg"
+        >
+        <view class="flex-grow flex justify-space-between align-center">
+          <view class="pl-20 flex column">
+            <text>限时活动</text>
+            <text class="c999">奖励95积分</text>
+          </view>
+          <view>
+            <jvc-button size="small" type="primary">领取任务</jvc-button>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 积分兑换权益 -->
+        <view class="p-20 fw-700 flex">积分兑换权益</view>
+
+  </view>
+</template>
+
+<script>
+// button,icon,input,cell
+import wepy from 'wepy';
+export default class bonus extends wepy.page {
+  config = {
+    navigationBarTitleText: '领积分',
+    usingComponents: {
+      'jvc-button': '../../iview/jvc_button/index',
+      'jvc-icon': '../../iview/jvc_icon/index',
+      'jvc-media': '../../wux/jvc_media/index',
+      'jvc-media-b': '../../wux/jvc_media_b/index',
+      'wux-tag': '../../wux/tag/index',
+      'jvc-circle': '../../wux/jvc_circle/index',
+      'wux-circle': '../../wux/circle/index',
+      'wux-badge': '../../wux/badge/index',
+      'i-input': '../../iview/input/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index',
+      'i-load-more': '../../iview/load-more/index'
+    }
+  };
+  components = {};
+
+  data = {
+    days: [1, 2, 3, 4, 5, 6, 7],
+    percents: [
+      { percent: 23, color: 'red' },
+      { percent: 44, color: 'orange' },
+      { percent: 50, color: 'blue' },
+      { percent: 88, color: 'yellow' },
+      { percent: 100, color: 'green' }
+    ],
+    item: {
+      name: '1号营业点',
+      label: '48V充电柜',
+      address: '沃尔玛停车场',
+      id: 1,
+      distanceText: '700m'
+    }
+  };
+
+  computed = {};
+
+  methods = {
+    onClick(e) {
+      console.log(e);
+    },
+    thumbTap(e) {
+      console.log(e);
+    }
+  };
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style lang="less">
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-top: 160rpx;
+  background: #f3f7ff;
+  .tag {
+    position: absolute;
+    left: 80rpx;
+    top: 80rpx;
+    color: #158de5;
+    text-align: center;
+
+    .circle {
+      background: #0669da;
+      color: #fff;
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      line-height: 80rpx;
+    }
+  }
+}
+.step {
+  background: #158de5;
+  color: #fff;
+  padding: 40rpx 10rpx;
+  display: flex;
+  .left {
+    border-right: 1px solid #fff;
+    padding-right: 10rpx;
+  }
+  .right {
+    flex-grow: 1;
+    padding-left: 10rpx;
+    position: relative;
+    .circle {
+      z-index: 2;
+      background: #0669da;
+      width: 50rpx;
+      height: 50rpx;
+      line-height: 50rpx;
+      text-align: center;
+      border-radius: 50%;
+    }
+    .current {
+      background: #fff;
+      color: #158de5;
+    }
+    .border {
+      height: 10rpx;
+      background: #0669da;
+      position: absolute;
+      bottom: 20rpx;
+      left: 20rpx;
+      right: 20rpx;
+    }
+  }
+}
+</style>

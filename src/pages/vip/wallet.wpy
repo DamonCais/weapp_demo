@@ -21,10 +21,11 @@
     </view>
     <wux-popup closable visible="{{ visible }}" title="余额说明" @close="onClose">
       <view class="p-20" style="text-align:left;">
-        <view>1.余额不能返现</view>
-        <view>2.余额包括充值余额和退款余额</view>
-        <view>3.你的xxxxx</view>
-        <view>4.</view>
+        <view>.用户余额暂不支持提现</view>
+        <view>.余额包含充值余额与退款金额</view>
+        <view>（注：退款金额指通过余额支付而产生的退款，金额原路退回账户）</view>
+        <view>.余额可用于本平台任意产品支付</view>
+        <view>.指定商品现金红包不叠加至余额</view>
       </view>
     </wux-popup>
   </view>

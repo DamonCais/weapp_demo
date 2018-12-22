@@ -17,21 +17,13 @@ Component({
             type: String,
             value: '',
         },
-        address: {
-            type: String,
-            value: '',
-        },
-        distance: {
-            type: String,
-            value: '',
-        },
         align: {
             type: String,
             value: 'center',
         },
     },
     methods: {
-        onTap() {
+        thumbTap() {
             this.triggerEvent('thumbTap');
         }
     }

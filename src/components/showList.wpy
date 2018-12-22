@@ -4,11 +4,6 @@
     <block wx:for="{{form}}" wx:for-index="key">
       <i-cell title="{{item.label}}" value="{{item.value}}"></i-cell>
     </block>
-    <!-- <i-cell wx:if="{{isEdit}}" hover-class="none">
-
-      <wux-input @confirm="onConfirm" label="{{label}}" controlled value="{{value}}"/>
-    </i-cell>
-    <i-cell wx:if="{{!isEdit}}" hover-class="none" title="{{label}}" extra="{{value}}"></i-cell>-->
   </i-cell-group>
 </template>
 <script>

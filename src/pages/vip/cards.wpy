@@ -1,92 +1,88 @@
 <template>
   <view>
-    <view>
-      <!-- <swiper
-        indicator-dots="{{indicatorDots}}"
-        autoplay="{{autoplay}}"
-        interval="{{interval}}"
-        duration="{{duration}}"
-        circular="{{circular}}"
-        current="{{ currentIndex }}"
-        previous-margin="100rpx"
-        next-margin="100rpx"
-        @change="swiperChange"
-        @animationfinish="animationfinish"
-        class="swiper"
-      >
-        <view wx:for="{{swiperList}}">
-          <swiper-item>
-            <view class="item-wrapper" style="padding:{{ currentIndex===index?'20rpx':'60rpx'}}">
-              <view class="item-border bg-white flex column">
-                <image src="{{item.img}}" class="slide-image">
-                <view class="p-20 flex column justify-space-between flex-grow">
-                  <view class="flex justify-space-between fs-48">
-                    <text class="c000">{{item.title}}</text>
-                    <text class="c333">￥{{item.price}}</text>
-                  </view>
-                  <view class="c666 fs-36">会员卡内容</view>
-                  <view class="c999 fs-24">会员卡说明</view>
-                </view>
-              </view>
-            </view>
-          </swiper-item>
+    <view class="wux-energized--bg p-20">
+      <jvc-media-b thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
+        <view class="flex justify-space-between pv-20">
+          <view class="flex column">
+            <view class="c333">{{userInfo.nickName}}</view>
+            <view class="c999">2018.12.26到期</view>
+          </view>
+          <view @tap.stop="tapVipInfo" class="666 fs-24">权益说明</view>
         </view>
-      </swiper>-->
-
+      </jvc-media-b>
+    </view>
+    <wux-cell title="选择会员套餐" @tap="tapCard" extra="实物卡激活" is-link></wux-cell>
+    <view>
       <mySwiper
         :currentIndex.sync="currentIndex"
         :swiperList.sync="swiperList"
         @swiperChange.user="swiperChange"
-        swiperHeight="800rpx"
+        swiperHeight="500rpx"
       ></mySwiper>
     </view>
     <view class="mt-20">
       <myTabs :currentIndex.sync="currentIndex" :swiperList.sync="swiperList"/>
-      <!-- <i-tabs scroll toView="{{toView}}" current="{{ currentIndex }}" @change="onTabsChange">
-        <i-tab tabId="tab{{index}}" wx:for="{{swiperList}}" key="{{index}}">
-          <view
-            
-            class="ph-20 flex column align-center justify-center"
-            style="zoom:{{currentIndex==index?'1.3':'1'}};"
-          >
-            <image
-              src="{{item.img}}"
-              style="border-radius: 20rpx;width: 20px; height: 20px; margin-right: 5px;"
-            >
-            <text clss="fs-24">{{item.title}}</text>
-          </view>
-        </i-tab>
-      </i-tabs>-->
     </view>
-    <view class="p-20">当前会员有效期：20天</view>
-    <view class="footer pv-20 bg-white border-box">
-      <wux-button @tap="tapPaid" block type="balanced">马上续费</wux-button>
+    <view class="footer pv-20 align-center justify-space-between flex bg-white">
+      <view class="c333 flex-grow">应付：￥{{swiperList[currentIndex].price}}</view>
+      <jvc-button @tap="tapPaid" class="p-20 flex-grow" type="my-pay" shape="circle">确认支付</jvc-button>
     </view>
+    <wux-popup closable visible="{{ visible }}" title="会员权益说明" @close="onClose">
+      <view class="p-20" style="text-align:left;">
+        <view
+          style="text-indent:2em;"
+        >本会员卡针对智能充电柜商品，会员卡以购买的时段为单位，支付成功当日起算，在所购买会员卡时段内，可享受本平台所属充电柜无限次“借、还”服务。有效期内再次购买会员套餐会在原有会员卡到期后自动生效。</view>
+        <view
+          style="text-indent:2em;"
+        >关于连续包月：开通“会员自动续费”将开通微信/支付宝免密支付，授权扣费周期为30天，并从签约账户中扣除续费金额，续费金额为续约金额，扣费前有短信提醒。可随时取消此服务、取消后不再续费。</view>
+        <view style="text-indent:2em;">关于退款：购买会员卡后，不得退款、转让使用。</view>
+        <view style="text-indent:2em;">适用范围：本活动卡适用于所有XX公司运营充电柜，XX公司对本会员卡充值活动持最终解释权。</view>
+      </view>
+    </wux-popup>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
+import myBtn from '@/components/button';
+
+import { USER_INFO } from '@/utils/constant';
 import mySwiper from '@/components/swiper';
 import myTabs from '@/components/tabs';
+
 export default class cards extends wepy.page {
   config = {
     navigationBarTitleText: '会员卡',
+    navigationBarBackgroundColor: '#ffc900',
+    backgroundColor: '#ffc900',
     usingComponents: {
       'jvc-tabs': '../../wux/jvc_tabs/index',
       'jvc-tab': '../../wux/jvc_tab/index',
+      'jvc-button': '../../iview/jvc_button/index',
+      'jvc-media-b': '../../wux/jvc_media_b/index',
+
       'wux-button': '../../wux/button/index',
       'wux-card': '../../wux/card/index',
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'wux-media': '../../wux/media/index',
+      'wux-popup': '../../wux/popup/index',
+      'wux-tag': '../../wux/tag/index',
+
       'i-tabs': '../../iview/tabs/index',
       'i-tab': '../../iview/tab/index'
     }
   };
   components = {
     mySwiper: mySwiper,
-    myTabs: myTabs
+    myTabs: myTabs,
+    myBtn: myBtn
   };
 
   data = {
+    userInfo: {},
+    visible: false,
+
     indicatorDots: false,
     autoplay: false,
     interval: 5000,
@@ -138,6 +134,17 @@ export default class cards extends wepy.page {
   };
 
   methods = {
+    onClose() {
+      this.visible = false;
+      this.$apply();
+    },
+    tapCard() {
+      wepy.navigateTo({ url: '/pages/vip/card' });
+    },
+    tapVipInfo() {
+      this.visible = true;
+      this.$apply();
+    },
     tapPaid(e) {
       wepy.navigateTo({ url: '/pages/orders/paid' });
     },
@@ -155,7 +162,9 @@ export default class cards extends wepy.page {
 
   events = {};
 
-  onLoad() {}
+  onLoad() {
+    this.userInfo = wepy.getStorageSync(USER_INFO);
+  }
 }
 </script>
 

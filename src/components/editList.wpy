@@ -3,16 +3,6 @@
   <view>
     <wux-select id="wux-select1"/>
     <block wx:for="{{form}}" wx:for-index="key">
-      <!-- <wux-cell  title="{{item.label}}" extra="{{item.value}}"></wux-cell> -->
-      <!-- <wux-cell >
-        <wux-input
-          slot="footer"
-          @confirm="onConfirm"
-          data-key="{{key}}"
-          controlled
-          value="{{item.value}}"
-        />
-      </wux-cell>-->
       <i-input
         data-key="{{key}}"
         @change="onChange"
@@ -36,15 +26,6 @@
         value="{{ item.value }}"
         title="{{item.label}}"
       />
-      <!-- <wux-cell
-        title="{{item.label}}"
-        extra="{{item.value}}"
-        @tap="tapPicker"
-        data-key="{{key}}"
-        wx:if="{{item.type==='picker'}}"
-      >
-      </wux-cell>-->
-
       <picker
         wx:if="{{item.type==='date'}}"
         mode="date"
@@ -58,12 +39,7 @@
         <!-- <wux-cell extra="{{item.value}}" title="{{item.label}}"></wux-cell> -->
       </picker>
     </block>
-    <!-- <wux-cell wx:if="{{isEdit}}" >
-
-      <wux-input slot="footer"  @confirm="onConfirm" label="{{label}}" controlled value="{{value}}"/>
-    </wux-cell>
-    <wux-cell wx:if="{{!isEdit}}"  title="{{label}}" extra="{{value}}"></wux-cell>-->
-  </view>
+     </view>
 </template>
 <script>
 import wepy from 'wepy';

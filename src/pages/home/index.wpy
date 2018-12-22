@@ -1,9 +1,9 @@
 <template>
-  <view class="pv-20">
+  <view>
     <!-- 顶部搜索 -->
-    <view class="flex align-center mb-20">
+    <view class="flex align-center bg-white pv-20">
       <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
-      <view class="pv-20" style="flex-grow:1;">
+      <view class="pv-20 " style="flex-grow:1;">
         <!-- <wux-search-bar @tap="tapSearchBar" clear=""/> -->
         <wux-button size="small" @tap="tapSearchBar" block outline type="light">
           <wux-icon type="ios-search" size="16"/>Search
@@ -21,7 +21,7 @@
       </wux-popover>
     </view>
     <!-- 轮播 -->
-    <view class="swiper">
+    <view class="pv-20 swiper">
       <swiper
         indicator-dots="true"
         autoplay="true"
@@ -39,15 +39,15 @@
       </swiper>
     </view>
     <!-- 定位 -->
-    <view class="flex justify-space-between align-center ph-20 ">
+    <view class="flex justify-space-between align-center p-20 ">
       <view @tap="tapLocation" class="flex align-center" style="flex-grow:1;">
         <wux-icon size="24" type="ios-pin"/>
         <text class="wux-ellipsis pl-20" style="width:300rpx">附近营业网点</text>
       </view>
       <!-- <wux-filterbar items="{{ items }}" @change="filterChange"/> -->
     </view>
+    <view class="pv-20">
     <block wx:for="{{shopList}}" wx:key="">
-      <view class="p-10 bg-white radio-10 mb-20">
         <jvc-media
           @tap="tapShop"
           data-id="{{item.id}}"
@@ -65,8 +65,9 @@
           <view class="cddd">购物(无)</view>
         </view>
         </jvc-media>
-      </view>
     </block>
+    </view>
+
 
     <!-- <wux-button wx:if="{{hasMore}}" block size="small" @tap="tapLoadMore" type="positive">加载更多</wux-button> -->
     <i-load-more loading="{{ loading }}" />

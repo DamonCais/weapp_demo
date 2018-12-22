@@ -101,6 +101,7 @@ export default class button extends wepy.component {
   color: #fff !important;
   background: #f90 !important;
 }
+
 .i-btn-error {
   color: #fff !important;
   background: #ed3f14 !important;
@@ -148,5 +149,15 @@ export default class button extends wepy.component {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.i-btn-my-pay {
+  color: #fff !important;
+  background: linear-gradient(to right, #f9d794 0%, #ffbe4b 100%) !important;
+}
+
+.i-btn-my-battery {
+  color: #fff !important;
+  background: linear-gradient(to right, #9aff9a 0%, #00ee00 100%) !important;
 }
 </style>

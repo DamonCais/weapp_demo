@@ -1,0 +1,58 @@
+<template>
+  <view class="p-20">
+    <wux-cell-group title="实体卡">
+      <editList1 :form.sync="baseForm"/>
+    </wux-cell-group>
+    <view class="p-20 flex-grow">
+      <myBtn type="my-pay" shape="circle">马上激活</myBtn>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import editList from '@/components/editList';
+import myBtn from '@/components/button';
+
+export default class card extends wepy.page {
+  config = {
+    navigationBarTitleText: '激活实物卡',
+    usingComponents: {
+      'wux-cell-group': '../../wux/cell-group/index',
+      'wux-cell': '../../wux/cell/index',
+      'i-input': '../../iview/input/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index'
+    }
+  };
+  components = {
+    editList1: editList,
+    myBtn: myBtn
+  };
+
+  data = {
+    baseForm: {
+      id: {
+        label: '卡号',
+        value: ''
+      },
+      password: {
+        label: '卡密',
+        value: ''
+      }
+    }
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+}
+</script>
+
+<style>
+</style>

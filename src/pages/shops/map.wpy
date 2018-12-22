@@ -1,10 +1,19 @@
 <template>
   <view>
+    <view class="flex align-center bg-white border-box p-20">
+      <wux-icon @tap="tapScan" type="ios-qr-scanner"/>
+      <view
+        class="pl-20"
+        @tap="tapChooseLocation"
+        style="flex-grow:1;"
+      >{{location.name||'搜索位置查找附近营业点'}}</view>
+      <wux-icon @tap="tapList" type="ios-list"/>
+    </view>
     <view>
       <map
         id="map"
-        longitude="119.58325688"
-        latitude="26.719876"
+        longitude="{{location.longitude}}"
+        latitude="{{location.latitude}}"
         scale="14"
         controls="{{controls}}"
         bindcontroltap="controltap"
@@ -12,8 +21,10 @@
         bindmarkertap="markertap"
         bindregionchange="regionchange"
         show-location
+        show-compass
         style="width: 100%; height:1334rpx;"
       >
+        <cover-view></cover-view>
         <cover-view wx:if="{{shopVisible}}" class="footer p-20">
           <cover-view data-id="1" @tap="tapShop" class="bg-white radio-20 flex column p-20">
             <cover-view class="flex">
@@ -27,13 +38,11 @@
                 <cover-view>沃尔玛停车场</cover-view>
               </cover-view>
             </cover-view>
-            <cover-view
-              style="border-top:1px solid #999;"
-              class="flex justify-space-between lh-60 pt-20 text-center"
-            >
-              <cover-view style="border-right:1px solid #999;" class="wux-balanced flex-grow">换电(6)</cover-view>
-              <cover-view style="border-right:1px solid #999;" class="cddd flex-grow">租车(无)</cover-view>
-              <cover-view style="border-right:1px solid #999;" class="cddd flex-grow">加盟(无)</cover-view>
+            <cover-view style="border:1px solid #999;"></cover-view>
+            <cover-view class="flex justify-space-between lh-60 pt-20 text-center">
+              <cover-view class="wux-balanced flex-grow">换电(6)</cover-view>
+              <cover-view class="cddd flex-grow">租车(无)</cover-view>
+              <cover-view class="cddd flex-grow">加盟(无)</cover-view>
               <cover-view class="cddd flex-grow">购物(无)</cover-view>
             </cover-view>
           </cover-view>
@@ -141,15 +150,26 @@ export default class shops extends wepy.page {
         distanceText: '900m'
       }
     ],
-    location: {},
+    location: {
+      longitude: 119.58325688,
+      latitude: 26.719876
+    },
     items: []
   };
 
   computed = {};
 
   methods = {
-    tapLocation() {
-      this.showMap = !this.showMap;
+    async tapChooseLocation() {
+      try {
+        let res = await wepy.chooseLocation();
+        console.log(res);
+        this.location = res;
+        this.$apply();
+      } catch (error) {}
+    },
+    tapList() {
+      wepy.switchTab({ url: '/pages/shops/index' });
     },
     regionchange(e) {
       console.log(e.type);
