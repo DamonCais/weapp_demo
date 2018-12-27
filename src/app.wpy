@@ -10,35 +10,31 @@
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-
-import { setStore } from 'wepy-redux';
-import configStore from './store';
-
-const store = configStore();
-setStore(store);
+import api from '@/api/api';
 
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/bonus/get',
-      'pages/vip/index',
-      'pages/vip/bonus',
+      'pages/authorize',
+      'pages/battery/exchange',
 
-      'pages/shops/shop',
+      'pages/pravicy',
+
+      'pages/league/index',
 
       'pages/home/index',
 
-      'pages/authorize',
-      'pages/base',
-
-      'pages/vip/card',
+      'pages/shops/index',
+      'pages/vip/index',
       'pages/vip/cards',
-
+      'pages/bonus/get',
+      'pages/bonus/index',
+      'pages/shops/shop',
+      'pages/base',
+      'pages/vip/card',
       'pages/battery/batteryInfo',
 
       'pages/shops/map',
-
-      'pages/shops/index',
 
       'pages/orders/paid',
       'pages/orders/index',
@@ -48,15 +44,17 @@ export default class extends wepy.app {
       'pages/vip/wallet',
       'pages/vip/recharge',
 
-      'pages/league/index',
       'pages/orders/order',
-
-      'pages/battery/exchange',
 
       'pages/vip/info',
       'pages/search',
       'pages/messages/index'
     ],
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于获取附近的充电设备'
+      }
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -71,28 +69,40 @@ export default class extends wepy.app {
       list: [
         {
           pagePath: 'pages/home/index',
-          text: '首页'
+          text: '首页',
+          iconPath: 'images/icon-home.png',
+          selectedIconPath: 'images/icon-home-active.png'
         },
 
         {
           pagePath: 'pages/shops/index',
-          text: '换电'
+          text: '换电',
+          iconPath: 'images/car-battery.png',
+          selectedIconPath: 'images/car-battery-active.png'
         },
         {
           pagePath: 'pages/league/index',
-          text: '加盟'
+          text: '加盟',
+          iconPath: 'images/code.png',
+          selectedIconPath: 'images/code-active.png'
         },
 
         {
           pagePath: 'pages/vip/index',
-          text: '会员'
+          text: '会员',
+          iconPath: 'images/huiyuan.png',
+          selectedIconPath: 'images/huiyuan-active.png'
         }
       ]
     }
   };
 
   globalData = {
-    userInfo: null
+    userInfo: null,
+    userSpecialInfo: null,
+    location: null,
+    encryptedOBJ: null,
+    loginObj: null
   };
 
   constructor() {
@@ -101,9 +111,7 @@ export default class extends wepy.app {
     this.use('promisify');
   }
 
-  onLaunch() {
-    // this.testAsync();
-  }
+  onLaunch() {}
 
   sleep(s) {
     return new Promise((resolve, reject) => {
@@ -117,18 +125,97 @@ export default class extends wepy.app {
     // const data = await this.sleep(3);
     // console.log(data);
   }
-
-  getUserInfo(cb) {
-    const that = this;
-    if (this.globalData.userInfo) {
-      return this.globalData.userInfo;
+  async getUserInfo() {
+    let setting = await wepy.getSetting();
+    if (setting.authSetting['scope.userInfo']) {
+      await this.getUserSpecialInfo();
     }
-    wepy.getUserInfo({
-      success(res) {
-        that.globalData.userInfo = res.userInfo;
-        cb && cb(res.userInfo);
+  }
+  async onGotUserInfo(e) {
+    try {
+      await this.getUserSpecialInfo(e);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+  async login() {
+    console.log('login');
+    let login = await wepy.login();
+    console.log(login);
+    if (login.code) {
+      let obj = {
+        appid: 'wx8068d80484bbb746',
+        secret: 'fbbd75b2bc602daea28ce0359d6aa2aa',
+        js_code: login.code
+      };
+      let res = await api.get(`/sys/code2Session`, obj);
+      console.log(res.data);
+      this.loginObj = JSON.parse(res.data.entity);
+    }
+  }
+  async getUserSpecialInfo(e) {
+    try {
+      let { openid, session_key } = this.loginObj;
+      // 第二步：获取encryptedOBJ
+      if (e) {
+        this.encryptedOBJ = e.detail;
+        this.userInfo = e.detail.userInfo;
+      } else {
+        let data = await wepy.getUserInfo({
+          withCredentials: true
+        });
+        this.encryptedOBJ = data;
+        this.userInfo = data.userInfo;
       }
-    });
+      // 第三步： 获取unionId;
+      let { encryptedData, iv } = this.encryptedOBJ;
+      encryptedData = encryptedData.replace(/\+/g, '2B%');
+      session_key = session_key.replace(/\+/g, '2B%');
+      iv = iv.replace(/\+/g, '2B%');
+      let obj2 = {
+        encryptedDataStr: encryptedData,
+        key: session_key,
+        iv
+      };
+      let res2 = await api.post(`/sys/AES_decrypt`, obj2);
+      var data = JSON.parse(res2.data.entity);
+      // var pc = new RdWXBizDataCrypt(session_key);
+      // var data = pc.decryptData(encryptedData, iv);
+      console.log(data);
+      console.log(session_key);
+      // 第四步，通过unionid获取用户信息
+
+      let obj3 = {
+        Uid: data.unionId,
+        UidType: 'Unionid'
+      };
+
+      let res3 = await api.get(`/MB/GetUserInfo`, obj3);
+      this.userSpecialInfo = res3.data.entity;
+      let obj4 = {
+        UserCode: this.userSpecialInfo.user_Infor.UserCode,
+        Uid: openid,
+        UidType: 'OpenID'
+      };
+      let res4 = await api.get(`/MB/BindUidType`, obj4);
+      console.log(res4.data);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    // 第一步:login通过code2Session获取session_key
+  }
+  async getLocation() {
+    try {
+      let res = await wepy.getLocation({
+        type: 'gcj02' //默认为 wgs84 返回 gps 坐标，gcj02 返回可用于wepy.chooseLocation的坐标,
+      });
+      this.location = res;
+      return res;
+    } catch (error) {}
+  }
+  navigateTo(path) {
+    console.log(path);
+    wepy.navigateTo({ url: path });
   }
 }
 </script>

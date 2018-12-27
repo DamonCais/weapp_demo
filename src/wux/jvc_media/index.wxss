@@ -20,5 +20,5 @@
     padding:20rpx;
     background: white;
     border-radius: 10rpx;
-    margin-bottom: 20rpx;
+    /* margin-bottom: 20rpx; */
 }

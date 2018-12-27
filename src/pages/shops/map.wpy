@@ -30,7 +30,7 @@
             <cover-view class="flex">
               <cover-image
                 style="width:150rpx;height:150rpx;"
-                src="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+                src="http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg"
               ></cover-image>
               <cover-view class="flex-grow flex column p-20 justify-space-between">
                 <cover-view>1号营业点</cover-view>
@@ -66,16 +66,14 @@ export default class shops extends wepy.page {
   config = {
     navigationBarTitleText: '营业网点',
     navigationBarBackgroundColor: '#ffc900',
-    backgroundColor: '#ffc900',
+    // backgroundColor: '#ffc900',
     usingComponents: {
-      'wux-accordion-group': '../../wux/accordion-group/index',
-      'wux-accordion': '../../wux/accordion/index',
       'wux-popup': '../../wux/popup/index',
       'wux-button': '../../wux/button/index',
       'wux-icon': '../../wux/icon/index',
       'wux-badge': '../../wux/badge/index',
       'wux-card': '../../wux/card/index',
-      'wux-filterbar': '../../wux/filterbar/index',
+
       'wux-cell-group': '../../wux/cell-group/index',
       'wux-cell': '../../wux/cell/index',
       'wux-search-bar': '../../wux/search-bar/index',
@@ -120,36 +118,6 @@ export default class shops extends wepy.page {
       id: 1,
       distanceText: '700m'
     },
-    shopList0: [
-      {
-        name: '1号营业点',
-        label: '48V充电柜',
-        address: '沃尔玛停车场',
-        id: 1,
-        distanceText: '700m'
-      },
-      {
-        name: '2号营业点',
-        label: '48V充电柜',
-        address: '沃尔玛停车场',
-        id: 2,
-        distanceText: '800m'
-      },
-      {
-        name: '3号营业点',
-        label: '48V充电柜',
-        address: '沃尔玛停车场',
-        id: 3,
-        distanceText: '900m'
-      },
-      {
-        name: '4号营业点',
-        label: '48V充电柜',
-        address: '沃尔玛停车场',
-        id: 4,
-        distanceText: '900m'
-      }
-    ],
     location: {
       longitude: 119.58325688,
       latitude: 26.719876

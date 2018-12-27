@@ -1,32 +1,17 @@
 <template>
   <view>
     <view class="wux-energized--bg p-20">
-      <!-- <wux-media @tap="tapUserInfo"  thumb="{{userInfo.avatarUrl}}" thumb-style="border-radius: 50%">
-        <view style="height:100%;" class="flex justify-space-between align-center pv-20">
-          <view class="c333 ">
-            {{userInfo.nickName}}
-            <wux-tag class="pl-20" color="green">普通会员</wux-tag>
-          </view>
-          <view @tap.stop="tapVipInfo" class="c999 fs-24">会员说明</view>
-        </view>
-      </wux-media>-->
-      <!-- <media @tapThumb.user="tapUserInfo" :thumb.sync="avatarUrl" thumbStyle="border-radius: 50%" >
-          <view style="height:100%;" class="flex justify-space-between align-center pv-20">
-          <view class="c333 " @tap="tapUserInfo">
-            {{userInfo.nickName}}
-            <wux-tag @tap.stop="tapVipInfo" class="pl-20" color="green">普通会员</wux-tag>
-          </view>
-          <view @tap.stop="tapVipInfo" class="666 fs-24">会员说明</view>
-        </view>
-      </media>-->
-
-      <jvc-media-b @thumbTap="tapUserInfo" thumb="{{avatarUrl}}" thumbStyle="border-radius: 50%">
+      <jvc-media-b
+        @thumbTap="tapUserInfo"
+        thumb="{{userInfo.avatarUrl}}"
+        thumbStyle="border-radius: 50%"
+      >
         <view style="height:100%;" class="flex justify-space-between align-center pv-20">
           <view class="c333" @tap="tapUserInfo">
             {{userInfo.nickName}}
             <wux-tag @tap.stop="tapVipInfo" class="pl-20" color="green">普通会员</wux-tag>
           </view>
-          <view @tap.stop="tapVipInfo" class="666 fs-24">会员说明</view>
+          <view @tap.stop="tapVipInfo" class="666 fs-24">会员权益</view>
         </view>
       </jvc-media-b>
     </view>
@@ -53,7 +38,10 @@
           <text>2</text>
           <text>红包</text>
         </view>
-        <view @tap="tapBonus" class="flex column flex-grow justify-space-around text-center p-20 vip-tab">
+        <view
+          @tap="tapBonus"
+          class="flex column flex-grow justify-space-around text-center p-20 vip-tab"
+        >
           <text>20</text>
           <text>积分</text>
         </view>
@@ -74,32 +62,31 @@
         <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
       </wux-cell>
       <wux-cell title="我的钱包" @tap="tapWallet" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-wallet"/>
       </wux-cell>
       <wux-cell @tap="tapCards" title="会员" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-person-add"/>
       </wux-cell>
-            <wux-cell @tap="tapBonus" title="积分" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      <wux-cell @tap="tapBonus" title="积分" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="logo-buffer"/>
       </wux-cell>
-      <wux-cell title="优惠券" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+      <wux-cell @tap="tapPacket" title="优惠券" is-link>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-mail-unread"/>
       </wux-cell>
       <wux-cell title="更换手机号" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+        <wux-icon slot="header" size="30" class="mr-20" type="md-phone-landscape"/>
+      </wux-cell>
+      <wux-cell title="客服" is-link open-type="contact" @contact="onContact">
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-chatbubbles"/>
       </wux-cell>
       <wux-cell title="关于" is-link>
-        <wux-icon slot="header" size="30" class="mr-20" type="ios-list"/>
+        <wux-icon slot="header" size="30" class="mr-20" type="ios-information-circle"/>
       </wux-cell>
     </wux-cell-group>
     <view class="p-20">
-      <jvc-button
-        shape="circle"
-        loading="{{false}}"
-        @click="onClick"
-        type="error"
-      >退出登录</jvc-button>    </view>
-    <wux-popup closable visible="{{ visible }}" title="会员权益说明" @close="onClose">
+      <jvc-button shape="circle" loading="{{false}}" @click="tapLogout" type="error">退出登录</jvc-button>
+    </view>
+    <wux-popup closable visible="{{ visible }}" title="会员权益" @close="onClose">
       <view class="p-20" style="text-align:left;">
         <view>您当前为Vx级会员</view>
         <view>您可通过累计会员积分提高会员等级，等级越高，可享受的权益越丰厚</view>
@@ -110,13 +97,11 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { SYSTEM_INFO, USER_SPECICAL_INFO, USER_INFO } from '@/utils/constant';
-import media from '@/components/media';
 export default class vip extends wepy.page {
   config = {
     navigationBarTitleText: '会员',
     navigationBarBackgroundColor: '#ffc900',
-    backgroundColor: '#ffc900',
+    // backgroundColor: '#ffc900',
     usingComponents: {
       'jvc-media-b': '../../wux/jvc_media_b/index',
       'jvc-button': '../../iview/jvc_button/index',
@@ -135,7 +120,6 @@ export default class vip extends wepy.page {
     }
   };
   components = {
-    media: media
   };
 
   data = {
@@ -151,8 +135,8 @@ export default class vip extends wepy.page {
   };
 
   methods = {
-    tapBonus(){
-      wepy.navigateTo({ url: '/pages/vip/bonus' });
+    tapBonus() {
+      wepy.navigateTo({ url: '/pages/bonus/index' });
     },
     tapPacket() {
       wepy.navigateTo({ url: '/pages/vip/packet' });
@@ -179,13 +163,20 @@ export default class vip extends wepy.page {
     onClose() {
       this.visible = false;
       this.$apply();
+    },
+    onContact(e) {
+      console.log(e);
+    },
+    tapLogout(){
+      wepy.navigateTo({ url: '/pages/authorize' });
+      
     }
   };
 
   events = {};
 
   onLoad() {
-    this.userInfo = wepy.getStorageSync(USER_INFO);
+    this.userInfo = this.$parent.userInfo;
     this.avatarUrl = this.userInfo.avatarUrl;
     this.$apply();
   }

@@ -209,12 +209,25 @@ page {
 .fs-36{
   font-size: 36rpx;
 }
+.fs-46{
+  font-size: 40rpx;
+}
 .fs-48{
   font-size: 48rpx;
+}
+.fw-500{
+  font-weight: 500;
+}
+.fw-600{
+  font-weight: 600;
 }
 .fw-700{
   font-weight: 700;
 }
+.fw-800{
+  font-weight: 800;
+}
+
 .lh-60{
   line-height: 60rpx;
 }
@@ -224,6 +237,9 @@ page {
 
 .text-center{
   text-align: center;
+}
+.text-left{
+  text-align: left;
 }
 
 .bg-white{
@@ -260,10 +276,31 @@ page {
 .border-top{
   border-top: 1px solid #d9d9d9;
 }
+.border-bottom{
+  border-bottom: 1px solid #d9d9d9;
+}
 .bd{
   border:1rpx solid #d9d9d9;
 }
 .box-shadow{
   box-shadow:1px 1px 1px #d9d9d9;
+}
+.text-indent{
+  text-indent: 2em;
+}
+.scrollable {
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch !important;
+
+  &.only-x {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+  }
+
+  &.only-y {
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+  }
 }
 

@@ -1,9 +1,53 @@
 <template>
-  <view class="p-20">
-    <wux-popup maskClosable="{{false}}" visible="{{ true }}" title="{{title}}">
+  <view class="">
+    <view class="p-20">
+      <wux-result
+        wx:if="{{!loading}}"
+        title="换电成功"
+        label="恭喜换电成功，点击确定返回首页！"
+        buttons="{{ buttons }}"
+        fixed
+        bind:click="onClick"
+      ></wux-result>
+    </view>
+    <view class="p-20 bg-white text-center">请在
+      <text class="wux-balanced fs-48 fw-600">{{countTime}}</text>内完成换电操作
+    </view>
+    <wux-cell-group title="换电步骤">
+      <wux-cell title="1.归还电池" is-link label="把电池放入充电柜中"></wux-cell>
+      <wux-cell title="2.关闭柜门" is-link label="附加描述"></wux-cell>
+      <wux-cell title="3.取出新电池" is-link label="附加描述"></wux-cell>
+      <wux-cell title="4.关闭柜门" is-link label=""></wux-cell>
+    </wux-cell-group>
+    <view class="p-20">
+      <jvc-button @click="tapSuccess" type="success">已完成换电</jvc-button>
+    </view>
+    <view class="p-20">
+      <jvc-button @click="tapError" type="error">操作遇到问题</jvc-button>
+    </view>
+    <!-- <wux-popup maskClosable="{{false}}" visible="{{ loading }}" title="{{title}}">
       <image src="{{img}}" style="width:100%">
-      <view slot="footer" class="flex pv-20" style="width:100%"   >
-        <wux-button style="width:100%"  size="small" loading="{{loading}}" block type="balanced">{{loading?'轮询中...':'完成'}}</wux-button>
+      <view slot="footer" class="flex pv-20" style="width:100%">
+        <wux-button
+          style="width:100%"
+          size="small"
+          loading="{{loading}}"
+          block
+          type="balanced"
+        >{{loading?'轮询中...':'完成'}}</wux-button>
+      </view>
+    </wux-popup>-->
+    <wux-popup bind:close="popClose" position="bottom" closable visible="{{ errorPop }}">
+      <view slot="header" class="p-20">咨询客服</view>
+      <view class="p-20 border-top">
+        <jvc-button open-type="contact" @contact="onContact" long="true" type="ghost">
+          <text class="wux-balanced">联系客服</text>
+        </jvc-button>
+      </view>
+      <view class="p-20 border-top">
+        <jvc-button @click="tapPhoneCall" long="true" type="ghost">
+          <text class="wux-balanced">拨打客服热线</text>
+        </jvc-button>
       </view>
     </wux-popup>
   </view>
@@ -11,17 +55,34 @@
 
 <script>
 import wepy from 'wepy';
+import { $wuxCountDown } from '../../wux/index';
+
 export default class base extends wepy.page {
   config = {
     navigationBarTitleText: '换电中',
     usingComponents: {
+      'wux-popup': '../../wux/popup/index',
+      'wux-cell-group': '../../wux/cell-group/index',
       'wux-button': '../../wux/button/index',
-      'wux-popup': '../../wux/popup/index'
+      'wux-tag': '../../wux/tag/index',
+      'wux-cell': '../../wux/cell/index',
+      'jvc-button': '../../iview/jvc_button/index'
     }
   };
   components = {};
 
   data = {
+    time: null,
+    countTime: '3分',
+    errorPop: false,
+    currentIndex: 0,
+    buttons: [
+      {
+        type: 'balanced',
+        block: true,
+        text: '确定'
+      }
+    ],
     loading: true,
     title: '',
     img: '',
@@ -47,32 +108,62 @@ export default class base extends wepy.page {
 
   computed = {};
 
-  methods = {};
+  methods = {
+    popClose() {
+      this.errorPop = false;
+    },
+    async tapError() {
+      this.errorPop = true;
+    },
+    tapSuccess() {},
+    onClick(e) {
+      console.log(e);
+      wepy.switchTab({ url: '/pages/home/index' });
+    }
+  };
 
   events = {};
-
-  onLoad() {
-    this.title = this.steps[0].title;
-    this.img = this.steps[0].img;
-    this.$apply();
-    this.checkCurrentStep();
-  }
-  checkCurrentStep() {
-    let timer = setInterval(() => {
-      this.currentStep++;
-      if (this.currentStep === 1) {
-        this.title = this.steps[1].title;
-        this.img = this.steps[1].img;
-        this.$apply();
-      } else if (this.currentStep === 2) {
-        this.title = this.steps[2].title;
-        this.img = this.steps[2].img;
-        this.loading = false;
-        clearInterval(timer);
-        this.$apply();
+  countDown() {
+    let that = this;
+    this.time = new $wuxCountDown({
+      date: +new Date() + 60000 * 3,
+      onEnd() {
+        that.countTime = '';
+        that.$apply();
+      },
+      render(date) {
+        const min = this.leadingZeros(date.min, 2) + ' 分 ';
+        const sec = this.leadingZeros(date.sec, 2) + ' 秒 ';
+        if (date.sec !== 0) {
+          that.countTime = min + sec;
+          that.$apply();
+        }
       }
-    }, 3000);
+    });
   }
+  onLoad() {
+    this.countDown();
+    // this.title = this.steps[0].title;
+    // this.img = this.steps[0].img;
+    // this.$apply();
+    // this.checkCurrentStep();
+  }
+  // checkCurrentStep() {
+  //   let timer = setInterval(() => {
+  //     this.currentStep++;
+  //     if (this.currentStep === 1) {
+  //       this.title = this.steps[1].title;
+  //       this.img = this.steps[1].img;
+  //       this.$apply();
+  //     } else if (this.currentStep === 2) {
+  //       this.title = this.steps[2].title;
+  //       this.img = this.steps[2].img;
+  //       this.loading = false;
+  //       clearInterval(timer);
+  //       this.$apply();
+  //     }
+  //   }, 3000);
+  // }
 }
 </script>
 

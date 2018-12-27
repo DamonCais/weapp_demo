@@ -14,7 +14,7 @@
     <jvc-media
       @thumbTap="thumbTap"
       data-id="{{item.id}}"
-      thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+      thumb="http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg"
       thumb-style="border-radius: 30rpx"
       title="{{item.name}}"
       label="{{item.label}}"
@@ -30,14 +30,14 @@
     </jvc-media>
     <!-- 顶部card -->
     <jvc-media-b
-      thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+      thumb="http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg"
       thumbStyle="border-radius: 50%"
     >
       <view style="height:100%;" class="flex justify-space-between align-center pv-20">
         <view class="c333">name
           <wux-tag @tap.stop="tapVipInfo" class="pl-20" color="green">普通会员</wux-tag>
         </view>
-        <view @tap.stop="tapVipInfo" class="666 fs-24">会员说明</view>
+        <view @tap.stop="tapVipInfo" class="666 fs-24">会员权益</view>
       </view>
     </jvc-media-b>
     <!-- 自定义icon -->

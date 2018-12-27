@@ -6,7 +6,7 @@
         <view>签到</view>
         <view class="circle">+1</view>
       </view>
-      <wux-circle animate="{{false}}" percent="100" color="#158DE5">点击领取</wux-circle>
+      <wux-circle @tap="tapGet" animate="{{false}}" percent="100" color="#158DE5">点击领取</wux-circle>
     </view>
     <!-- 签到Step -->
     <view class="step">
@@ -16,9 +16,10 @@
       </view>
       <view class="right flex align-center justify-space-between">
         <view class="border"></view>
+        <view style="width:{{currentIndex*85}}rpx;" class="current-border"></view>
         <view wx:for="{{days}}" class="flex column justify-space-between align-center">
           <view class="fs-24">12.22</view>
-          <view class="circle {{index<4?'current':''}} fs-24">+{{index+1}}</view>
+          <view class="circle {{index<2?'current':''}} fs-24">+{{index+1}}</view>
         </view>
       </view>
     </view>
@@ -88,6 +89,7 @@ export default class bonus extends wepy.page {
 
   data = {
     days: [1, 2, 3, 4, 5, 6, 7],
+    currentIndex:0,
     percents: [
       { percent: 23, color: 'red' },
       { percent: 44, color: 'orange' },
@@ -107,6 +109,9 @@ export default class bonus extends wepy.page {
   computed = {};
 
   methods = {
+    tapGet(){
+      this.currentIndex++;
+    },
     onClick(e) {
       console.log(e);
     },
@@ -185,6 +190,13 @@ export default class bonus extends wepy.page {
       left: 20rpx;
       right: 20rpx;
     }
+    .current-border{
+      height: 10rpx;
+      background: #fff;
+      position: absolute;
+      bottom: 20rpx;
+      left: 40rpx;
+}
   }
 }
 </style>

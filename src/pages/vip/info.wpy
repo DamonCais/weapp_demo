@@ -92,14 +92,12 @@ export default class vip extends wepy.page {
   config = {
     navigationBarTitleText: '个人资料',
     navigationBarBackgroundColor: '#ffc900',
-    backgroundColor: '#ffc900',
+    // backgroundColor: '#ffc900',
     usingComponents: {
       'jvc-button': '../../iview/jvc_button/index',
 
       'jvc-media-b': '../../wux/jvc_media_b/index',
 
-      'wux-accordion-group': '../../wux/accordion-group/index',
-      'wux-accordion': '../../wux/accordion/index',
       'wux-icon': '../../wux/icon/index',
       'wux-grids': '../../wux/grids/index',
       'wux-grid': '../../wux/grid/index',
@@ -179,7 +177,8 @@ export default class vip extends wepy.page {
   events = {};
 
   onLoad() {
-    this.userInfo = wepy.getStorageSync(USER_INFO);
+    this.userInfo = this.$parent.userInfo;
+    this.$apply();
   }
 }
 </script>

@@ -1,15 +1,13 @@
 <template>
   <view class="league">
-        <image src="http://mp.jycais.cn/uploadDir/upload_c38a7f643297790dad9aabb6d3e64706.jpg" class="coverbg">
-
-  <view class="p-20 league-btn">
-          <wux-button  block type="balanced">马上加盟</wux-button>
-
-  </view>
-
-  <view class="league-rule">
-    加盟规则
-  </view>
+    <image
+      src="http://mp.jycais.cn/uploadDir/upload_238604385a5bd638359398b6c9d7271d.jpg"
+      class="coverbg"
+    >
+    <view style="bottom:{{systemInfo.windowHeight*0.35}}rpx;" class="league-btn flex justify-center align-center">
+      <image @tap="tapJoin" src="http://mp.jycais.cn/uploadDir/upload_43d9fb72242618f8a744b2dc3baaa262.png">
+    </view>
+    <view class="league-rule">加盟规则</view>
   </view>
 </template>
 
@@ -24,23 +22,35 @@ export default class league extends wepy.page {
   };
   components = {};
 
-  data = {};
+  data = {
+    systemInfo:{
+      windowHeight:555,
+      windowWidth:375,
+    },
+  };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    tapJoin(e){
+      console.log(e);
+    }
+  };
 
   events = {};
 
-  onLoad() {}
+  async onLoad() {
+    let res = await wepy.getSystemInfoSync();
+    this.systemInfo = res;
+  }
 }
 </script>
 
 <style lang="less">
-.league{
+.league {
   position: relative;
   height: 100%;
-  width:100%;
+  width: 100%;
 }
 .coverbg {
   // filter: blur(35px);
@@ -48,23 +58,28 @@ export default class league extends wepy.page {
   left: 0;
   bottom: 0;
   width: 750rpx;
-  height: 1334rpx;
+  height: 100%;
   // z-index: -2;
   display: block;
 }
-.league-btn{
+.league-btn {
   position: absolute;
-  bottom:20px;
+  // bottom: 20px;
   left: 0;
-  right:0;
-}
-.league-rule{
-  position: absolute;
-  right:0;
-  top:40rpx;
-  background:#fff;
-  padding:10rpx;
+  right: 0;
   
+  image{
+    width:349rpx;
+    height: 176rpx;
+  }
+}
+.league-rule {
+  position: absolute;
+  right: 0;
+  top: 40rpx;
+  background: #fff;
+  padding: 10rpx;
+  font-size:36rpx;
   border-top-left-radius: 30rpx;
   border-bottom-left-radius: 30rpx;
   line-height: 40rpx;

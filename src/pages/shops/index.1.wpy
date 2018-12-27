@@ -13,7 +13,7 @@
           <jvc-media
             @tap="tapShop"
             data-id="{{item.id}}"
-            thumb="http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg"
+            thumb="http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg"
             thumb-style="border-radius: 30rpx"
             title="{{item.name}}"
             label="{{item.label}}"
@@ -47,16 +47,16 @@ export default class shops extends wepy.page {
   config = {
     navigationBarTitleText: '营业网点',
     navigationBarBackgroundColor: '#ffc900',
-    backgroundColor: '#ffc900',
+       // backgroundColor: '#ffc900',
     usingComponents: {
-      'wux-accordion-group': '../../wux/accordion-group/index',
-      'wux-accordion': '../../wux/accordion/index',
+      
+      
       'wux-popup': '../../wux/popup/index',
       'wux-button': '../../wux/button/index',
       'wux-icon': '../../wux/icon/index',
       'wux-badge': '../../wux/badge/index',
       'wux-card': '../../wux/card/index',
-      'wux-filterbar': '../../wux/filterbar/index',
+      
       'wux-cell-group': '../../wux/cell-group/index',
       'wux-cell': '../../wux/cell/index',
       'wux-search-bar': '../../wux/search-bar/index',

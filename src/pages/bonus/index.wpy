@@ -41,7 +41,7 @@
       <text>510</text>
     </view>
     <view class="footer p-20">
-      <jvc-button class="flex-grow" shape="circle" @click="onClick" type="primary">签到领积分</jvc-button>
+      <jvc-button class="flex-grow" shape="circle" @click="tapGetBonus" type="primary">签到领积分</jvc-button>
     </view>
   </view>
 </template>
@@ -53,19 +53,19 @@ export default class bonus extends wepy.page {
   config = {
     navigationBarTitleText: '我的积分',
     usingComponents: {
-      'jvc-button': '../../../iview/jvc_button/index',
-      'jvc-icon': '../../../iview/jvc_icon/index',
-      'jvc-media': '../../../wux/jvc_media/index',
-      'jvc-media-b': '../../../wux/jvc_media_b/index',
-      'wux-tag': '../../../wux/tag/index',
-      'jvc-circle': '../../../wux/jvc_circle/index',
-      'wux-badge': '../../../wux/badge/index',
+      'jvc-button': '../../iview/jvc_button/index',
+      'jvc-icon': '../../iview/jvc_icon/index',
+      'jvc-media': '../../wux/jvc_media/index',
+      'jvc-media-b': '../../wux/jvc_media_b/index',
+      'wux-tag': '../../wux/tag/index',
+      'jvc-circle': '../../wux/jvc_circle/index',
+      'wux-badge': '../../wux/badge/index',
 
-      'i-input': '../../../iview/input/index',
-      'i-cell-group': '../../../iview/cell-group/index',
-      'i-cell': '../../../iview/cell/index',
-      'i-panel': '../../../iview/panel/index',
-      'i-load-more': '../../../iview/load-more/index'
+      'i-input': '../../iview/input/index',
+      'i-cell-group': '../../iview/cell-group/index',
+      'i-cell': '../../iview/cell/index',
+      'i-panel': '../../iview/panel/index',
+      'i-load-more': '../../iview/load-more/index'
     }
   };
   components = {};
@@ -90,8 +90,8 @@ export default class bonus extends wepy.page {
   computed = {};
 
   methods = {
-    onClick(e) {
-      console.log(e);
+    tapGetBonus(e) {
+      wepy.navigateTo({ url: '/pages/bonus/get' });
     },
     thumbTap(e) {
       console.log(e);

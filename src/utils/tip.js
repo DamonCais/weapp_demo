@@ -28,8 +28,25 @@ export default class Tips {
   }
 
   /**
-   * 弹出确认窗口
+   * 提示框
    */
+
+  static tips(text, payload = {}, title = "提示") {
+    return new Promise((resolve, reject) => {
+      wx.showModal({
+        title: title,
+        content: text,
+        showCancel: false,
+        success: res => {
+          resolve(payload);
+        },
+
+      });
+    });
+  }
+  /**
+     * 弹出确认窗口
+     */
   static confirm(text, payload = {}, title = "提示") {
     return new Promise((resolve, reject) => {
       wx.showModal({
@@ -74,7 +91,7 @@ export default class Tips {
   static alert(title) {
     wx.showToast({
       title: title,
-      image: "../images/alert.png",
+      image: "/images/alert.png",
       mask: true,
       duration: 1500
     });
@@ -87,7 +104,7 @@ export default class Tips {
   static error(title, onHide) {
     wx.showToast({
       title: title,
-      image: "../images/error.png",
+      image: "/images/error.png",
       mask: true,
       duration: 500
     });
@@ -128,7 +145,7 @@ export default class Tips {
       title: title,
       path: url,
       desc: desc,
-      success: function(res) {
+      success: function (res) {
         Tips.toast("分享成功");
       }
     };

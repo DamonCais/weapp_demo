@@ -44,8 +44,6 @@
 
 <script>
 import wepy from 'wepy';
-import myBtn from '@/components/button';
-
 import { USER_INFO } from '@/utils/constant';
 import mySwiper from '@/components/swiper';
 import myTabs from '@/components/tabs';
@@ -54,7 +52,7 @@ export default class cards extends wepy.page {
   config = {
     navigationBarTitleText: '会员卡',
     navigationBarBackgroundColor: '#ffc900',
-    backgroundColor: '#ffc900',
+    // backgroundColor: '#ffc900',
     usingComponents: {
       'jvc-tabs': '../../wux/jvc_tabs/index',
       'jvc-tab': '../../wux/jvc_tab/index',
@@ -75,8 +73,7 @@ export default class cards extends wepy.page {
   };
   components = {
     mySwiper: mySwiper,
-    myTabs: myTabs,
-    myBtn: myBtn
+    myTabs: myTabs
   };
 
   data = {
@@ -115,7 +112,7 @@ export default class cards extends wepy.page {
 
         title: '6个月会员',
         img:
-          'http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg'
+          'http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg'
       },
       {
         price: '500',
@@ -163,7 +160,8 @@ export default class cards extends wepy.page {
   events = {};
 
   onLoad() {
-    this.userInfo = wepy.getStorageSync(USER_INFO);
+    this.userInfo = this.$parent.userInfo;
+    this.$apply();
   }
 }
 </script>

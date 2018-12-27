@@ -1,11 +1,11 @@
 <template>
   <view class="p-20 border-box wallet">
-    <card class="mb-20" title="账户余额">
+    <wux-card class="mb-20" title="账户余额">
       <view @tap="tapExtra" slot="extra">余额说明</view>
       <view slot="body" class="wux-assertive">￥
         <text class="fs-48">0</text>
       </view>
-    </card>
+    </wux-card>
     <view class="mb-200">
     <i-panel  title="充值有礼">
       <image
@@ -33,7 +33,6 @@
 
 <script>
 import wepy from 'wepy';
-import card from '@/components/card';
 export default class wallet extends wepy.page {
   config = {
     navigationBarTitleText: '我的钱包',
@@ -45,7 +44,6 @@ export default class wallet extends wepy.page {
     }
   };
   components = {
-    card: card
   };
 
   data = {

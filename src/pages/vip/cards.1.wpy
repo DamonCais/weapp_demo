@@ -113,7 +113,7 @@ export default class base extends wepy.page {
 
         title: '6个月会员',
         img:
-          'http://mp.jycais.cn/uploadDir/upload_189f15d5f63b54131ed2fd7b1dbc01ef.jpg'
+          'http://mp.jycais.cn/uploadDir/upload_e8a40217607982e65ad8f04e82dc8b5c.jpg'
       },
       {
                 price:'400',

@@ -11,7 +11,7 @@
         <view style="border-top:1px solid #000;width:100%;" class="p-20" slot="footer">
           <checkbox-group bindchange="checkboxChange">
             <label style="zoom:1;display:inline-block" class="checkbox">
-              <checkbox value="checked" checked="{{isChecked}}"/>我已阅读并同意《换点须知》
+              <checkbox value="checked" checked="{{isChecked}}"/>我已阅读并同意《换电须知》
             </label>
           </checkbox-group>
         </view>
@@ -21,41 +21,81 @@
       <editList1 :form.sync="baseForm"/>
     </wux-cell-group>-->
     <wux-cell-group title="电池信息">
-      <wux-cell extra="abc123" is-link @tap="tapScan" title="我的电池码"></wux-cell>
+      <wux-cell extra="{{scanId}}" is-link @tap="tapScan" title="我的电池码"></wux-cell>
       <wux-cell extra="48V" title="电池大小"></wux-cell>
     </wux-cell-group>
     <wux-cell-group title="费用信息">
-      <wux-cell title="合计" extra="免费"></wux-cell>
+      <wux-card title="合计" extra="￥0.00">
+        <view slot="body">您是普通会员，换电不收费！</view>
+      </wux-card>
+      <!-- <wux-cell title="合计" extra="免费"></wux-cell> -->
     </wux-cell-group>
     <view class="p-20 border-20">
       <image
-        style="width:100%;height:300rpx; "
-        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544763965330&di=a484102f33d3721555a4632fcb93ab70&imgtype=0&src=http%3A%2F%2Fpic90.huitu.com%2Fres%2F20161116%2F804858_20161116180047869020_1.jpg"
+        style="width:100%;"
+        mode="widthFix"
+        src="http://mp.jycais.cn/uploadDir/upload_9a2a3248e4ab172de92419c90c4d86d7.jpg"
       >
     </view>
     <!-- <view class="p-20">
       <wux-button block size="small" data-id="{{id}}" @tap="tapPaid" type="positive">需要支付</wux-button>
     </view>-->
-    <view @tap="tapBattery" class="footer bg-white p-20">
-      <myBtn  type="my-battery" shape="circle">马上换电</myBtn>
-      <!-- <wux-button block size="small" data-id="{{id}}" @tap="tapBattery" type="positive">马上换电</wux-button> -->
+    <view class="footer bg-white p-20">
+      <jvc-button @click="tapBattery" type="my-battery" shape="circle">马上换电</jvc-button>
     </view>
+    <wux-popup
+      maskClosable="{{false}}"
+      bind:close="popClose"
+      closable
+      visible="{{ errorPop }}"
+      title="{{error.title}}"
+    >
+      <view>
+        <view class="p-20">
+          <jvc-button @click="tapScan" long="true" type="ghost">
+            <text class="wux-balanced">重新扫码</text>
+          </jvc-button>
+        </view>
+        <view class="p-20 border-top">
+          <jvc-button open-type="contact" @contact="onContact" long="true" type="ghost">
+            <text class="wux-balanced">联系客服</text>
+          </jvc-button>
+        </view>
+        <view class="p-20 border-top">
+          <jvc-button @click="tapPhoneCall" long="true" type="ghost">
+            <text class="wux-balanced">拨打客服热线</text>
+          </jvc-button>
+        </view>
+      </view>
+    </wux-popup>
+    <!-- <i-modal title="{{error.title}}" visible="{{ errorPop }}" actions="{{ actions }}" action-mode="vertical" >
+        <jvc-button @click="tapScan" long="true" type="ghost">
+          <text class="wux-balanced">重新扫码</text>
+        </jvc-button>
+        <jvc-button open-type="contact" @contact="onContact" long="true" type="ghost">
+          <text class="wux-balanced">联系客服</text>
+        </jvc-button>
+        <jvc-button @click="tapPhoneCall" long="true" type="ghost">
+          <text class="wux-balanced">拨打客服热线</text>
+        </jvc-button>
+    </i-modal>-->
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import editList from '@/components/editList';
-import myBtn from '@/components/button';
+import tip from '@/utils/tip';
 
 export default class base extends wepy.page {
   config = {
     navigationBarTitleText: '换电须知',
     usingComponents: {
+      'wux-popup': '../../wux/popup/index',
+
       'wux-card': '../../wux/card/index',
       'wux-wing-blank': '../../wux/wing-blank/index',
-      'wux-accordion-group': '../../wux/accordion-group/index',
-      'wux-accordion': '../../wux/accordion/index',
+
       'wux-icon': '../../wux/icon/index',
       'wux-grids': '../../wux/grids/index',
       'wux-grid': '../../wux/grid/index',
@@ -68,41 +108,37 @@ export default class base extends wepy.page {
       'wux-select': '../../wux/select/index',
       'i-input': '../../iview/input/index',
       'i-cell-group': '../../iview/cell-group/index',
+      'i-modal': '../../iview/modal/index',
+
       'i-cell': '../../iview/cell/index',
-      'i-panel': '../../iview/panel/index'
+      'i-panel': '../../iview/panel/index',
+      'jvc-button': '../../iview/jvc_button/index'
     }
   };
   components = {
-    editList1: editList,
-    myBtn: myBtn
+    editList1: editList
   };
 
   data = {
-    id: 'abc123',
+    error: {},
+    errorPop: false,
+    scanId: '',
     isChecked: false,
-    baseForm: {
-      type: {
-        label: '电池大小',
-        value: '',
-        type: 'picker',
-        options: ['48V', '36V']
-      },
-      status: {
-        label: '电池状态',
-        value: '',
-        type: 'picker',
-        options: ['完好无损', '轻微发热']
-      },
-      notes: {
-        label: '特别说明',
-        value: ''
-      }
-    }
+    productCode: '',
+    eqmUID: null
   };
 
   computed = {};
 
   methods = {
+    tapErrorBtn(e) {},
+    onContact(e) {
+      console.log(e);
+    },
+    popClose() {
+      this.errorPop = false;
+      this.$apply();
+    },
     checkboxChange(e) {
       let arr = e.detail.value;
       this.isChecked = Boolean(arr.length);
@@ -111,26 +147,65 @@ export default class base extends wepy.page {
     tapPaid(e) {
       let { id } = e.currentTarget.dataset;
       wepy.navigateTo({ url: '/pages/orders/order?id=' + id });
-    },
-    tapBattery(e) {
-      let { id } = e.currentTarget.dataset;
-      wepy.navigateTo({ url: '/pages/battery/exchange' });
-    },
-    async tapScan(e) {
-      try {
-        let res = await wepy.scanCode({
-          onlyFromCamera: false //是否只能从相机扫码，不允许从相册选择图片,
-        });
-        console.log(res.result);
-      } catch (error) {
-        console.log(error);
-      }
     }
   };
 
   events = {};
 
-  onLoad() {}
+  onLoad(option) {
+    let { productCode, eqmUID } = option;
+    this.productCode = productCode;
+    this.eqmUID = eqmUID;
+    console.log(option);
+  }
+  async batteryIdCheck() {
+    if (this.scanId != 'abc123') {
+      return Promise.reject('电池码不一致');
+    } else {
+      return Promise.resolve();
+    }
+  }
+  async tapPhoneCall(e) {
+    await wepy.makePhoneCall({ phoneNumber: '13728119700' });
+  }
+  async tapBattery(e) {
+    if (!this.isChecked) {
+      wepy.pageScrollTo({
+        scrollTop: 0, //滚动到页面的目标位置（单位px）,
+        duration: 300 //滚动动画的时长，默认300ms，单位 ms,
+      });
+      tip.error('请阅读换电须知!!!');
+      return;
+    }
+    try {
+      if (!this.scanId) {
+        await this.tapScan();
+        this.$apply();
+      }
+      await this.batteryIdCheck();
+      // let { id } = e.currentTarget.dataset;
+      wepy.navigateTo({ url: '/pages/battery/exchange' });
+    } catch (error) {
+      console.log(error);
+      this.error.title = error;
+      this.errorPop = true;
+      this.$apply();
+    }
+  }
+  async tapScan(e) {
+    this.errorPop = false;
+    this.$apply();
+    try {
+      let res = await wepy.scanCode({
+        onlyFromCamera: false //是否只能从相机扫码，不允许从相册选择图片,
+      });
+      this.scanId = res.result;
+      this.$apply();
+      await this.tapBattery();
+    } catch (error) {
+      tip.error('请扫码！');
+    }
+  }
 }
 </script>
 
